@@ -35,6 +35,9 @@ def main():
             if enemy.reached_end:
                 enemies.remove(enemy)
                 # TODO player losing hp
+            if enemy.health <= 0:
+                enemy.die()
+                enemies.remove(enemy)
         
         # Draw everything
         screen.fill(BLACK)

@@ -64,4 +64,8 @@ class Enemy:
     
     def take_damage(self, damage):
         self.health -= damage
-        return self.health <= 0
+        if self.health <= 0:
+            self.die()
+
+    def die(self):
+        self.health = 0

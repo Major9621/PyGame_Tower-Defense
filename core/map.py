@@ -30,9 +30,9 @@ class Map:
                 )
             else:
                 rect = pygame.Rect(
-                    min(start[0], end[0]), 
+                    min(start[0], end[0]) - self.path_width // 2, 
                     start[1] - self.path_width // 2,
-                    abs(end[0] - start[0]), 
+                    abs(end[0] - start[0]) + self.path_width, 
                     self.path_width
                 )
             
@@ -49,3 +49,4 @@ class Map:
             x2, y2 = self.path[i + 1]
             length += math.sqrt((x2 - x1)**2 + (y2 - y1)**2)
         return length
+    
