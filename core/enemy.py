@@ -34,6 +34,12 @@ class Enemy:
         move_amount = self.speed / distance
         self.progress += move_amount
         
+        # Update position
+        self.position = (
+            start[0] + dx * self.progress,
+            start[1] + dy * self.progress
+        )
+
         if self.progress >= 1:
             # Move to next segment
             self.progress = 0
@@ -42,11 +48,7 @@ class Enemy:
                 self.reached_end = True
                 return
         
-        # Update position
-        self.position = (
-            start[0] + dx * self.progress,
-            start[1] + dy * self.progress
-        )
+        
     
     def draw(self, surface):
         # Draw enemy sprite (colored circle for now)
