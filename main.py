@@ -3,7 +3,7 @@ from core import inputSystem
 from core.map import Map
 from core.enemy import Enemy
 from core.turret import Turret
-from core.constants import BLACK, SCREEN_WIDTH, SCREEN_HEIGHT, FPS
+from core.constants import DARKGREEN,BLACK, SCREEN_WIDTH, SCREEN_HEIGHT, FPS
 
 def main():
     # Initialize pygame
@@ -65,7 +65,7 @@ def main():
         
         
         # Draw everything
-        screen.fill(BLACK)
+        screen.fill(DARKGREEN)
         game_map.draw(screen)
         for enemy in enemies:
             enemy.draw(screen)
