@@ -2,8 +2,9 @@ import pygame
 import math
 from .constants import RED, GREEN, BLACK, ENEMY_RADIUS
 
-class Enemy:
+class Enemy(pygame.sprite.Sprite):
     def __init__(self, path):
+        super().__init__()
         self.path = path
         self.path_index = 0
         self.progress = 0  # Progress along current path segment (0-1)
@@ -15,6 +16,8 @@ class Enemy:
         self.reached_end = False
         self.value = 10
         self.color = RED
+        self.image = pygame.Surface((ENEMY_RADIUS, ENEMY_RADIUS))
+        self.rect = self.image.get_rect(center=(self.position[0], self.position[1]))
         
     def update(self):
         if self.reached_end or self.path_index >= len(self.path) - 1:
@@ -39,6 +42,8 @@ class Enemy:
             start[0] + dx * self.progress,
             start[1] + dy * self.progress
         )
+        
+        self.rect.center = self.position
 
         if self.progress >= 1:
             # Move to next segment
@@ -59,15 +64,19 @@ class Enemy:
         health_percent = self.health / self.max_health
         pygame.draw.rect(surface, BLACK, 
                         (self.position[0] - bar_width//2, self.position[1] - self.radius - 10, 
-                         bar_width, 5))
+                        bar_width, 5))
         pygame.draw.rect(surface, GREEN, 
                         (self.position[0] - bar_width//2, self.position[1] - self.radius - 10, 
                          int(bar_width * health_percent), 5))
     
     def take_damage(self, damage):
         self.health -= damage
+        
         if self.health <= 0:
             self.die()
 
     def die(self):
         self.health = 0
+        
+    def isDead(self):
+        return self.health <= 0
