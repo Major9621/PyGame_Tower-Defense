@@ -4,6 +4,7 @@ from core.map import Map
 from core.enemy import Enemy
 from core.turret import Turret
 from core.constants import DARKGREEN,BLACK, SCREEN_WIDTH, SCREEN_HEIGHT, FPS
+import levels.maps as maps
 
 def main():
     # Initialize pygame
@@ -11,7 +12,7 @@ def main():
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     clock = pygame.time.Clock()
     
-    game_map = Map()
+    game_map = Map(maps.path2)
     turrets = []
     enemies = pygame.sprite.Group()
     bullets = pygame.sprite.Group()
