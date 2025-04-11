@@ -1,5 +1,5 @@
 import pygame
-from .constants import GREEN
+from .constants import YELLOW
 
 class Bullet(pygame.sprite.Sprite):
     def __init__(self, pos, dir, dmg, speed):
@@ -21,5 +21,5 @@ class Bullet(pygame.sprite.Sprite):
             bullets.remove(self)
     
     def draw(self, surface):
-        pygame.draw.circle(surface, GREEN, self.pos, 10)
+        pygame.draw.circle(surface, YELLOW, self.pos, 10)
     

@@ -1,6 +1,6 @@
 import pygame
 import math
-from .constants import GRAY, RED, PATH_WIDTH
+from .constants import GRAY, RED, PATH_WIDTH, BROWN
 
 class Map:
     def __init__(self):
@@ -36,7 +36,7 @@ class Map:
                     self.path_width
                 )
             
-            pygame.draw.rect(surface, GRAY, rect)
+            pygame.draw.rect(surface, BROWN, rect)
         
         # Draw path points (for debugging)
         for point in self.path:
