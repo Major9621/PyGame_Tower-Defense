@@ -1,5 +1,5 @@
 import pygame
-from .constants import BLUE
+from .constants import BLUE, YELLOW
 from .bullet import Bullet
 from .enemy import Enemy
 from . import vector2 as v2
@@ -49,7 +49,7 @@ class Turret:
                     self.currentEnemy = None
                 
                 #Shoot!
-                bullet = Bullet(self.pos, directionToEnemy, self.bulletDamage, self.bulletSpeed)
+                bullet = Bullet(self.pos, directionToEnemy, self.bulletDamage, self.bulletSpeed, YELLOW)
                 self.bullets.add(bullet)
                 
                 self.lastShotTime = currentTime

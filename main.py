@@ -5,9 +5,50 @@ from core.enemy import Enemy
 from core.turret import Turret
 from core.constants import DARKGREEN,BLACK, SCREEN_WIDTH, SCREEN_HEIGHT, FPS
 
-def main():
+
+def mainMenu():
     # Initialize pygame
     pygame.init()
+    pygame.display.set_caption("MainMenu")
+    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+
+
+    
+    running = True
+    while running:
+        screen.fill("black")
+        
+        MENU_MOUSE_POS = pygame.mouse.get_pos()
+        MENU_TEXT = pygame.font.SysFont("Arial-Bold", 70).render("Main Menu", True, "WHITE")
+        MENU_RECT = MENU_TEXT.get_rect(center=(SCREEN_WIDTH // 2, (SCREEN_HEIGHT // 2) - SCREEN_HEIGHT // 3))
+        
+        screen.blit(MENU_TEXT, MENU_RECT)
+        
+        
+
+        # Handle events
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            
+            #Mouse Click
+            if(event.type == pygame.MOUSEBUTTONDOWN and event.button == 1):
+                pass
+        
+        pygame.display.update()
+        
+    pygame.quit()
+
+def options():
+    pass
+
+
+
+
+def play():
+    # Initialize pygame
+    pygame.init()
+    pygame.display.set_caption("Play")
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     clock = pygame.time.Clock()
     
@@ -82,4 +123,4 @@ def main():
     pygame.quit()
 
 if __name__ == "__main__":
-    main()
+    mainMenu()
