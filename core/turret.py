@@ -13,8 +13,9 @@ class Turret:
         self.currentEnemy = None
         self.bullets = bullets
     
-    
-    shotsPerSecond = 2
+    bulletDamage = 10
+    bulletSpeed = 10
+    shotsPerSecond = 3
     shootInterval = 1000 / shotsPerSecond
     
     
@@ -48,7 +49,7 @@ class Turret:
                     self.currentEnemy = None
                 
                 #Shoot!
-                bullet = Bullet(self.pos, directionToEnemy, 10, 4)
+                bullet = Bullet(self.pos, directionToEnemy, self.bulletDamage, self.bulletSpeed)
                 self.bullets.add(bullet)
                 
                 self.lastShotTime = currentTime

@@ -16,8 +16,8 @@ class Bullet(pygame.sprite.Sprite):
         self.pos = (self.pos[0] + (self.dir[0] * self.speed), self.pos[1] + (self.dir[1] * self.speed))
         self.rect.center = self.pos
         
-        #Remove itself after 10 seconds
-        if(pygame.time.get_ticks() - self.spawnTime >= 10000):
+        #Remove itself after 5 seconds
+        if(pygame.time.get_ticks() - self.spawnTime >= 5000):
             bullets.remove(self)
     
     def draw(self, surface):

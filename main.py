@@ -16,7 +16,7 @@ def main():
     enemies = pygame.sprite.Group()
     bullets = pygame.sprite.Group()
 
-    spawn_interval = 2000
+    spawn_interval = 750
     last_spawn_time = 0
 
     # Game loop
