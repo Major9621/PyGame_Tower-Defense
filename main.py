@@ -18,7 +18,7 @@ def main():
     enemies = pygame.sprite.Group()
     bullets = pygame.sprite.Group()
 
-    wave_system = WaveManager(lambda: enemies.add(Enemy(game_map.path)))
+    wave_system = WaveManager(lambda cls: enemies.add(cls(game_map.path)))
 
     # Game loop
     running = True
