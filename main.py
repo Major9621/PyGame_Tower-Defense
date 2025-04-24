@@ -1,11 +1,12 @@
 import pygame
 import sys
 from core import inputSystem
+from core.waveManger import WaveManager
 from core.map import Map
 from core.enemy import Enemy
 from core.turret import Turret
-from core.player import Player
-from core.constants import DARKGREEN,BLACK, WHITE, GRAY, SCREEN_WIDTH, SCREEN_HEIGHT, FPS
+from core.constants import DARKGREEN,BLACK, SCREEN_WIDTH, SCREEN_HEIGHT, FPS
+import levels.maps as maps
 
 running = True
 
@@ -74,6 +75,7 @@ def play():
     clock = pygame.time.Clock()
     font = pygame.font.SysFont("Arial-Bold", 50)
     
+    game_map = Map(maps.path6)
     #Drawing Buttons
     def draw_button(text, center_pos):
         text_render = font.render(text, True, WHITE)
@@ -161,8 +163,7 @@ def play():
     enemies = pygame.sprite.Group()
     bullets = pygame.sprite.Group()
 
-    spawn_interval = 750
-    last_spawn_time = 0
+    wave_system = WaveManager(lambda cls: enemies.add(cls(game_map.path)))
 
     # Game loop
     global running
@@ -190,13 +191,9 @@ def play():
                 if event.key == pygame.K_ESCAPE:
                     pause()
         
-        #TODO Change to spawn enemies in waves curr spawns enemy every 2sec
-        if current_time - last_spawn_time > spawn_interval:
-            enemy = Enemy(game_map.path)
-            enemies.add(enemy)
-            last_spawn_time = current_time
-            
 
+        wave_system.update(current_time)
+        wave_system.check_wave_complete(enemies, current_time)
         for enemy in enemies:
             enemy.update()
             if enemy.reached_end:
