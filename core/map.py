@@ -3,40 +3,39 @@ import math
 from .constants import GRAY, RED, PATH_WIDTH, BROWN
 
 class Map:
-    def __init__(self):
-        self.path = [
-            (0, 300),
-            (200, 300),
-            (200, 150),
-            (400, 150),
-            (400, 450),
-            (600, 450),
-            (600, 300),
-            (800, 300)
-        ]
+    def __init__(self, path):
+        self.path = path
         self.path_width = PATH_WIDTH
         
     def draw(self, surface):
         for i in range(len(self.path) - 1):
             start = self.path[i]
             end = self.path[i + 1]
-            
-            if start[0] == end[0]:
+
+            dx = end[0] - start[0]
+            dy = end[1] - start[1]
+
+
+            if dx == 0:
                 rect = pygame.Rect(
                     start[0] - self.path_width // 2, 
                     min(start[1], end[1]), 
                     self.path_width, 
-                    abs(end[1] - start[1])
+                    abs(dy)
                 )
-            else:
+                pygame.draw.rect(surface, BROWN, rect)
+
+            elif dy == 0:
                 rect = pygame.Rect(
                     min(start[0], end[0]) - self.path_width // 2, 
                     start[1] - self.path_width // 2,
-                    abs(end[0] - start[0]) + self.path_width, 
+                    abs(dx) + self.path_width, 
                     self.path_width
                 )
-            
-            pygame.draw.rect(surface, BROWN, rect)
+                pygame.draw.rect(surface, BROWN, rect)
+
+            else:
+                pygame.draw.line(surface, BROWN, start, end, self.path_width)
         
         # Draw path points (for debugging)
         for point in self.path:
