@@ -1,5 +1,6 @@
 import pygame
 from core import inputSystem
+from core.waveManger import WaveManager
 from core.map import Map
 from core.enemy import Enemy
 from core.turret import Turret
@@ -12,13 +13,12 @@ def main():
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     clock = pygame.time.Clock()
     
-    game_map = Map(maps.path2)
+    game_map = Map(maps.path6)
     turrets = []
     enemies = pygame.sprite.Group()
     bullets = pygame.sprite.Group()
 
-    spawn_interval = 750
-    last_spawn_time = 0
+    wave_system = WaveManager(lambda: enemies.add(Enemy(game_map.path)))
 
     # Game loop
     running = True
@@ -35,13 +35,9 @@ def main():
                 inputSystem.leftMouseClickInteraction(event.pos)
                 turrets.append(Turret(event.pos, bullets))
         
-        #TODO Change to spawn enemies in waves curr spawns enemy every 2sec
-        if current_time - last_spawn_time > spawn_interval:
-            enemy = Enemy(game_map.path)
-            enemies.add(enemy)
-            last_spawn_time = current_time
-            
 
+        wave_system.update(current_time)
+        wave_system.check_wave_complete(enemies, current_time)
         for enemy in enemies:
             enemy.update()
             if enemy.reached_end:
@@ -82,5 +78,8 @@ def main():
     
     pygame.quit()
 
+
+
 if __name__ == "__main__":
     main()
+
