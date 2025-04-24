@@ -4,8 +4,9 @@ from core import inputSystem
 from core.waveManger import WaveManager
 from core.map import Map
 from core.enemy import Enemy
+from core.player import Player
 from core.turret import Turret
-from core.constants import DARKGREEN,BLACK, SCREEN_WIDTH, SCREEN_HEIGHT, FPS
+from core.constants import DARKGREEN,BLACK, WHITE, GRAY, SCREEN_WIDTH, SCREEN_HEIGHT, FPS
 import levels.maps as maps
 
 running = True
@@ -158,7 +159,7 @@ def play():
             
             pygame.display.update()
     
-    game_map = Map()
+    game_map = Map(maps.path6)
     turrets = []
     enemies = pygame.sprite.Group()
     bullets = pygame.sprite.Group()
