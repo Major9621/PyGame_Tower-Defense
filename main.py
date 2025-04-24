@@ -1,56 +1,160 @@
 import pygame
+import sys
 from core import inputSystem
 from core.map import Map
 from core.enemy import Enemy
 from core.turret import Turret
-from core.constants import DARKGREEN,BLACK, SCREEN_WIDTH, SCREEN_HEIGHT, FPS
+from core.player import Player
+from core.constants import DARKGREEN,BLACK, WHITE, GRAY, SCREEN_WIDTH, SCREEN_HEIGHT, FPS
 
+running = True
 
 def mainMenu():
-    # Initialize pygame
     pygame.init()
     pygame.display.set_caption("MainMenu")
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
+    font = pygame.font.SysFont("Arial-Bold", 50)
 
-    
-    running = True
+    #Drawing buttons
+    def draw_button(text, center_pos):
+        text_render = font.render(text, True, WHITE)
+        rect = text_render.get_rect(center=center_pos)
+        pygame.draw.rect(screen, GRAY, rect.inflate(20, 10))  #button background
+        screen.blit(text_render, rect)
+        return rect
+
+    global running
     while running:
         screen.fill("black")
-        
-        MENU_MOUSE_POS = pygame.mouse.get_pos()
-        MENU_TEXT = pygame.font.SysFont("Arial-Bold", 70).render("Main Menu", True, "WHITE")
-        MENU_RECT = MENU_TEXT.get_rect(center=(SCREEN_WIDTH // 2, (SCREEN_HEIGHT // 2) - SCREEN_HEIGHT // 3))
-        
-        screen.blit(MENU_TEXT, MENU_RECT)
-        
-        
 
-        # Handle events
+        MENU_MOUSE_POS = pygame.mouse.get_pos()
+        title_font = pygame.font.SysFont("Arial-Bold", 70)
+        MENU_TEXT = title_font.render("Main Menu", True, WHITE)
+        MENU_RECT = MENU_TEXT.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 4))
+        screen.blit(MENU_TEXT, MENU_RECT)
+
+        #Buttons
+        start_button = draw_button("Start", (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 50))
+        settings_button = draw_button("Settings", (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 30))
+        exit_button = draw_button("Exit", (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 110))
+
+        #Events
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            
-            #Mouse Click
-            if(event.type == pygame.MOUSEBUTTONDOWN and event.button == 1):
-                pass
-        
-        pygame.display.update()
-        
+
+            elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                if start_button.collidepoint(MENU_MOUSE_POS):
+                    print("Start Game")
+                    play()
+
+                elif settings_button.collidepoint(MENU_MOUSE_POS):
+                    print("Settings")
+
+                elif exit_button.collidepoint(MENU_MOUSE_POS):
+                    print("Exiting")
+                    running = False
+
+        if running:
+            pygame.display.update()
+
     pygame.quit()
+    sys.exit()
 
 def options():
     pass
 
 
 
-
 def play():
-    # Initialize pygame
     pygame.init()
     pygame.display.set_caption("Play")
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     clock = pygame.time.Clock()
+    font = pygame.font.SysFont("Arial-Bold", 50)
+    
+    #Drawing Buttons
+    def draw_button(text, center_pos):
+        text_render = font.render(text, True, WHITE)
+        rect = text_render.get_rect(center=center_pos)
+        pygame.draw.rect(screen, GRAY, rect.inflate(20, 10))  #button background
+        screen.blit(text_render, rect)
+        return rect
+    
+    #Pause 
+    def pause():
+        global running
+        while running:
+            screen.fill("black")
+
+            MENU_MOUSE_POS = pygame.mouse.get_pos()
+            title_font = pygame.font.SysFont("Arial-Bold", 70)
+            MENU_TEXT = title_font.render("Pause Menu", True, WHITE)
+            MENU_RECT = MENU_TEXT.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 4))
+            screen.blit(MENU_TEXT, MENU_RECT)
+
+            #Buttons
+            resume_button = draw_button("Resume", (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 50))
+            mainMenu_button = draw_button("Main Menu", (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 30))
+            exit_button = draw_button("Exit", (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 110))
+
+            #Events
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+
+                elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                    if resume_button.collidepoint(MENU_MOUSE_POS):
+                        print("Resume")
+                        return
+
+                    elif mainMenu_button.collidepoint(MENU_MOUSE_POS):
+                        print("Main Menu")
+                        mainMenu()
+
+                    elif exit_button.collidepoint(MENU_MOUSE_POS):
+                        print("Exiting")
+                        running = False
+                
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        return
+            
+            pygame.display.update()
+    
+    #Game over
+    def game_over():
+        global running
+        while running:
+            screen.fill("black")
+
+            MENU_MOUSE_POS = pygame.mouse.get_pos()
+            title_font = pygame.font.SysFont("Arial-Bold", 70)
+            MENU_TEXT = title_font.render("GAME OVER!", True, WHITE)
+            MENU_RECT = MENU_TEXT.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 4))
+            screen.blit(MENU_TEXT, MENU_RECT)
+
+            #Buttons
+            mainMenu_button = draw_button("Main Menu", (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 30))
+            exit_button = draw_button("Exit", (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 110))
+
+            #Events
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+
+                elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                    
+                    if mainMenu_button.collidepoint(MENU_MOUSE_POS):
+                        print("Main Menu")
+                        mainMenu()
+
+                    elif exit_button.collidepoint(MENU_MOUSE_POS):
+                        print("Exiting")
+                        running = False
+            
+            pygame.display.update()
     
     game_map = Map()
     turrets = []
@@ -61,10 +165,16 @@ def play():
     last_spawn_time = 0
 
     # Game loop
-    running = True
+    global running
+    player = Player(1000, (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 5))
+    
     while running:
         current_time = pygame.time.get_ticks()
 
+        if player.is_dead():
+            print("Game over")
+            game_over()
+        
         # Handle events
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -74,6 +184,11 @@ def play():
             if(event.type == pygame.MOUSEBUTTONDOWN and event.button == 1):
                 inputSystem.leftMouseClickInteraction(event.pos)
                 turrets.append(Turret(event.pos, bullets))
+            
+            #Pause game
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    pause()
         
         #TODO Change to spawn enemies in waves curr spawns enemy every 2sec
         if current_time - last_spawn_time > spawn_interval:
@@ -85,6 +200,7 @@ def play():
         for enemy in enemies:
             enemy.update()
             if enemy.reached_end:
+                player.take_damage(50)   #Taking damage if enemy reaches end
                 enemies.remove(enemy)
                 # TODO player losing hp
             if enemy.health <= 0:
@@ -108,6 +224,7 @@ def play():
         # Draw everything
         screen.fill(DARKGREEN)
         game_map.draw(screen)
+        player.draw_health_bar(screen)
         for enemy in enemies:
             enemy.draw(screen)
             
@@ -121,6 +238,8 @@ def play():
         clock.tick(FPS)
     
     pygame.quit()
+
+
 
 if __name__ == "__main__":
     mainMenu()
