@@ -6,6 +6,8 @@ from core.map import Map
 from core.enemy import Enemy
 from core.player import Player
 from core.turret import Turret
+from core.draw_button import draw_button
+from core.screens.pause_menu import pause
 from core.constants import DARKGREEN,BLACK, WHITE, GRAY, SCREEN_WIDTH, SCREEN_HEIGHT, FPS
 import levels.maps as maps
 
@@ -24,60 +26,10 @@ def play():
     
     game_map = Map(maps.path6)
     #Drawing Buttons
-    def draw_button(text, center_pos):
-        text_render = font.render(text, True, WHITE)
-        rect = text_render.get_rect(center=center_pos)
-        pygame.draw.rect(screen, GRAY, rect.inflate(20, 10))  #button background
-        screen.blit(text_render, rect)
-        return rect
+
     
     #Pause 
-    def pause():
-        global running
-        global exit_gameplay
-        while running:
-            
-            if exit_gameplay == True:
-                return
-            
-            screen.fill("black")
-
-            MENU_MOUSE_POS = pygame.mouse.get_pos()
-            title_font = pygame.font.SysFont("Arial-Bold", 70)
-            MENU_TEXT = title_font.render("Pause Menu", True, WHITE)
-            MENU_RECT = MENU_TEXT.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 4))
-            screen.blit(MENU_TEXT, MENU_RECT)
-
-            #Buttons
-            resume_button = draw_button("Resume", (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 50))
-            main_menu_button = draw_button("Main Menu", (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 30))
-            exit_button = draw_button("Exit", (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 110))
-
-            #Events
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    running = False
-
-                elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                    if resume_button.collidepoint(MENU_MOUSE_POS):
-                        print("Resume")
-                        return
-
-                    elif main_menu_button.collidepoint(MENU_MOUSE_POS):
-                        print("Main Menu")
-                        exit_gameplay = True    #mainMenu()
-                        return
-
-                    elif exit_button.collidepoint(MENU_MOUSE_POS):
-                        print("Exiting")
-                        running = False
-                        return
-                
-                elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
-                        return
-            
-            pygame.display.update()
+    
     
     #Game over
     def game_over():
@@ -109,12 +61,12 @@ def play():
                     if main_menu_button.collidepoint(MENU_MOUSE_POS):
                         print("Main Menu")
                         exit_gameplay = True #mainMenu()
-                        return
+                        return True
 
                     elif exit_button.collidepoint(MENU_MOUSE_POS):
                         print("Exiting")
                         running = False
-                        return
+                        return False
             
             pygame.display.update()
     
@@ -148,7 +100,13 @@ def play():
             #Pause game
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    pause()
+                    result = pause(screen, font)
+                    if result[0] == False:
+                        running = False
+                        return False
+                    elif result[1] == False:
+                        exit_gameplay = True
+                        return True
         
         if exit_gameplay:   #Exit to main menu
             return True
