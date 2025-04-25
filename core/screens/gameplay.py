@@ -10,13 +10,13 @@ from core.constants import DARKGREEN,BLACK, WHITE, GRAY, SCREEN_WIDTH, SCREEN_HE
 import levels.maps as maps
 
 running = True
-stopPlaying = False
+exit_gameplay = False
 
 def play():
     pygame.init()
     global running
-    global stopPlaying
-    stopPlaying = False
+    global exit_gameplay
+    exit_gameplay = False
     pygame.display.set_caption("Play")
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     clock = pygame.time.Clock()
@@ -34,10 +34,10 @@ def play():
     #Pause 
     def pause():
         global running
-        global stopPlaying
+        global exit_gameplay
         while running:
             
-            if stopPlaying == True:
+            if exit_gameplay == True:
                 return
             
             screen.fill("black")
@@ -50,7 +50,7 @@ def play():
 
             #Buttons
             resume_button = draw_button("Resume", (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 50))
-            mainMenu_button = draw_button("Main Menu", (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 30))
+            main_menu_button = draw_button("Main Menu", (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 30))
             exit_button = draw_button("Exit", (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 110))
 
             #Events
@@ -63,9 +63,9 @@ def play():
                         print("Resume")
                         return
 
-                    elif mainMenu_button.collidepoint(MENU_MOUSE_POS):
+                    elif main_menu_button.collidepoint(MENU_MOUSE_POS):
                         print("Main Menu")
-                        stopPlaying = True    #mainMenu()
+                        exit_gameplay = True    #mainMenu()
                         return
 
                     elif exit_button.collidepoint(MENU_MOUSE_POS):
@@ -82,9 +82,9 @@ def play():
     #Game over
     def game_over():
         global running
-        global stopPlaying
+        global exit_gameplay
         while running:
-            if stopPlaying:
+            if exit_gameplay:
                 return
             
             screen.fill("black")
@@ -96,7 +96,7 @@ def play():
             screen.blit(MENU_TEXT, MENU_RECT)
 
             #Buttons
-            mainMenu_button = draw_button("Main Menu", (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 30))
+            main_menu_button = draw_button("Main Menu", (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 30))
             exit_button = draw_button("Exit", (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 110))
 
             #Events
@@ -106,9 +106,9 @@ def play():
 
                 elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                     
-                    if mainMenu_button.collidepoint(MENU_MOUSE_POS):
+                    if main_menu_button.collidepoint(MENU_MOUSE_POS):
                         print("Main Menu")
-                        stopPlaying = True #mainMenu()
+                        exit_gameplay = True #mainMenu()
                         return
 
                     elif exit_button.collidepoint(MENU_MOUSE_POS):
@@ -150,7 +150,7 @@ def play():
                 if event.key == pygame.K_ESCAPE:
                     pause()
         
-        if stopPlaying:   #Exit to main menu
+        if exit_gameplay:   #Exit to main menu
             return True
 
         wave_system.update(current_time)
@@ -160,7 +160,6 @@ def play():
             if enemy.reached_end:
                 player.take_damage(50)   #Taking damage if enemy reaches end
                 enemies.remove(enemy)
-                # TODO player losing hp
             if enemy.health <= 0:
                 enemies.remove(enemy)
                 
