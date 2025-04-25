@@ -6,7 +6,7 @@ from core.map import Map
 from core.enemy import Enemy
 from core.player import Player
 from core.turret import Turret
-from screens.gameplay import play
+from core.screens.gameplay import play
 from core.constants import DARKGREEN,BLACK, WHITE, GRAY, SCREEN_WIDTH, SCREEN_HEIGHT, FPS
 import levels.maps as maps
 
