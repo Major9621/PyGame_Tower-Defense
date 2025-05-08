@@ -1,51 +1,19 @@
 import pygame
-import math
-from .constants import GRAY, RED, PATH_WIDTH, BROWN
+from .constants import TILE_SIZE
+import core.constants as cst
+from utils.tilemap_generator import generate_tilemap_from_path
 
 class Map:
-    def __init__(self, path):
-        self.path = path
-        self.path_width = PATH_WIDTH
-        
+    def __init__(self, grid_path):
+        self.grid_path = grid_path
+        self.width = max(x for x, y in grid_path) + 1
+        self.height = max(y for x, y in grid_path) + 1
+        self.tilemap = generate_tilemap_from_path(grid_path, self.width, self.height)
+
+
     def draw(self, surface):
-        for i in range(len(self.path) - 1):
-            start = self.path[i]
-            end = self.path[i + 1]
-
-            dx = end[0] - start[0]
-            dy = end[1] - start[1]
-
-
-            if dx == 0:
-                rect = pygame.Rect(
-                    start[0] - self.path_width // 2, 
-                    min(start[1], end[1]), 
-                    self.path_width, 
-                    abs(dy)
-                )
-                pygame.draw.rect(surface, BROWN, rect)
-
-            elif dy == 0:
-                rect = pygame.Rect(
-                    min(start[0], end[0]) - self.path_width // 2, 
-                    start[1] - self.path_width // 2,
-                    abs(dx) + self.path_width, 
-                    self.path_width
-                )
-                pygame.draw.rect(surface, BROWN, rect)
-
-            else:
-                pygame.draw.line(surface, BROWN, start, end, self.path_width)
-        
-        # Draw path points (for debugging)
-        for point in self.path:
-            pygame.draw.circle(surface, RED, point, 5)
-    
-    def get_path_length(self):
-        length = 0
-        for i in range(len(self.path) - 1):
-            x1, y1 = self.path[i]
-            x2, y2 = self.path[i + 1]
-            length += math.sqrt((x2 - x1)**2 + (y2 - y1)**2)
-        return length
-    
+        for y, row in enumerate(self.tilemap):
+            for x, tile in enumerate(row):
+                image = cst.TILE_TYPES.get(tile)
+                if image:
+                    surface.blit(image, (x * TILE_SIZE * 2, y * TILE_SIZE * 2))
