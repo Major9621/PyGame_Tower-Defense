@@ -4,7 +4,8 @@ import random
 from .enemy_registry import ENEMY_TYPES
 
 class WaveManager:
-    def __init__(self, spawn_enemy_callback):
+    def __init__(self, spawn_enemy_callback, ui_manager):
+        self.ui_manager = ui_manager
         self.wave_number = -1
         self.spawn_enemy = spawn_enemy_callback
         self.wave_in_progress = False
@@ -22,6 +23,7 @@ class WaveManager:
 
     def start_next_wave(self):
             self.wave_number += 1
+            self.ui_manager.update_wave_number(self.wave_number)
 
             # Unlock new enemy type every 5 waves
             type_keys = list(ENEMY_TYPES.keys())

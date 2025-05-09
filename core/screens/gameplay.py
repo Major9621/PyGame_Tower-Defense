@@ -6,6 +6,8 @@ from core.map import Map
 from core.enemy import Enemy
 from core.player import Player
 from core.turret import Turret
+from core.ui_manager import UI_Manager
+from core.gold_manager import GoldManager
 
 from core.draw_button import draw_button
 from core.screens.pause_menu import pause
@@ -50,7 +52,7 @@ def play():
             screen.blit(MENU_TEXT, MENU_RECT)
 
             #Buttons
-            main_menu_button = draw_button("Main Menu", (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 30))
+            main_menu_button = draw_button("Main Menu", (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 30), font, screen)
             exit_button = draw_button("Exit", (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 110))
 
             #Events
@@ -77,11 +79,13 @@ def play():
     enemies = pygame.sprite.Group()
     bullets = pygame.sprite.Group()
 
-    wave_system = WaveManager(lambda cls: enemies.add(cls(game_map.grid_path)))
-
-    # Game loop
-    player = Player(1000, (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 5))
+    ui_manager = UI_Manager(screen, (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 5), 1, 500)
+    gold_manager = GoldManager(500, ui_manager)
+    wave_system = WaveManager(lambda cls: enemies.add(cls(game_map.grid_path)), ui_manager)
+    player = Player(1000, ui_manager)
     
+    
+    # Game loop 
     while running:
         current_time = pygame.time.get_ticks()
 
@@ -97,7 +101,8 @@ def play():
             #Mouse Click
             if(event.type == pygame.MOUSEBUTTONDOWN and event.button == 1):
                 inputSystem.leftMouseClickInteraction(event.pos)
-                turrets.append(Turret(event.pos, bullets))
+                if gold_manager.spend_gold(200):  #Buying turret
+                    turrets.append(Turret(event.pos, bullets))
             
             #Pause game
             elif event.type == pygame.KEYDOWN:
@@ -120,9 +125,12 @@ def play():
             if enemy.reached_end:
                 player.take_damage(50)   #Taking damage if enemy reaches end
                 enemies.remove(enemy)
-            continue
-            # if enemy.health <= 0:
-            #     enemies.remove(enemy)
+                continue
+            
+            
+            if enemy.health <= 0:     #tu zmienione
+                gold_manager.add_gold(enemy.gold_dropped)
+                enemies.remove(enemy)
                 
         for turret in turrets:
             turret.update([e for e in enemies if e.state != "die"])
@@ -143,7 +151,9 @@ def play():
         screen.fill(DARKGREEN)
         game_map.draw(screen)
 
-        player.draw_health_bar(screen)
+        ui_manager.draw_health_bar()
+        ui_manager.draw_text()
+        
         for enemy in enemies:
             enemy.draw(screen)
             
