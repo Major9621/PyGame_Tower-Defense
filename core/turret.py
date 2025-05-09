@@ -12,7 +12,8 @@ class Turret:
         self.hp = 100
         self.currentEnemy = None
         self.bullets = bullets
-    
+        self.image = pygame.image.load("assets/towers/Idle/1.png").convert_alpha()
+
     bulletDamage = 10
     bulletSpeed = 10
     shotsPerSecond = 3
@@ -61,8 +62,7 @@ class Turret:
 
     
     def draw(self, surface):
-        size = 35
-        rect = pygame.Rect(self.pos[0] - size//2, self.pos[1] - size//2, size, size)
-        pygame.draw.rect(surface, BLUE, rect)
+        rect = self.image.get_rect(center=(self.pos[0], self.pos[1] - 32))
+        surface.blit(self.image, rect)
         pygame.draw.circle(surface, BLUE, self.pos, self.range, 1)
 
