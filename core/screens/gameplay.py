@@ -6,9 +6,11 @@ from core.map import Map
 from core.enemy import Enemy
 from core.player import Player
 from core.turret import Turret
+
 from core.draw_button import draw_button
 from core.screens.pause_menu import pause
-from core.constants import DARKGREEN,BLACK, WHITE, GRAY, SCREEN_WIDTH, SCREEN_HEIGHT, FPS
+from core.constants import DARKGREEN, BLACK, WHITE, GRAY, SCREEN_WIDTH, SCREEN_HEIGHT, FPS, init_tile_types, \
+    TILESET_PATH
 import levels.maps as maps
 
 running = True
@@ -21,10 +23,10 @@ def play():
     exit_gameplay = False
     pygame.display.set_caption("Play")
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    init_tile_types(TILESET_PATH)
     clock = pygame.time.Clock()
     font = pygame.font.SysFont("Arial-Bold", 50)
     
-    game_map = Map(maps.path6)
     #Drawing Buttons
 
     
@@ -70,12 +72,12 @@ def play():
             
             pygame.display.update()
     
-    game_map = Map(maps.path6)
+    game_map = Map(maps.grid_path2)
     turrets = []
     enemies = pygame.sprite.Group()
     bullets = pygame.sprite.Group()
 
-    wave_system = WaveManager(lambda cls: enemies.add(cls(game_map.path)))
+    wave_system = WaveManager(lambda cls: enemies.add(cls(game_map.grid_path)))
 
     # Game loop
     player = Player(1000, (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 5))
@@ -118,11 +120,12 @@ def play():
             if enemy.reached_end:
                 player.take_damage(50)   #Taking damage if enemy reaches end
                 enemies.remove(enemy)
-            if enemy.health <= 0:
-                enemies.remove(enemy)
+            continue
+            # if enemy.health <= 0:
+            #     enemies.remove(enemy)
                 
         for turret in turrets:
-            turret.update(enemies)
+            turret.update([e for e in enemies if e.state != "die"])
         
         for b in bullets:
             b.update(bullets)
@@ -139,6 +142,7 @@ def play():
         # Draw everything
         screen.fill(DARKGREEN)
         game_map.draw(screen)
+
         player.draw_health_bar(screen)
         for enemy in enemies:
             enemy.draw(screen)
@@ -148,7 +152,7 @@ def play():
             
         for b in bullets:
             b.draw(screen)
-                
+
         pygame.display.flip()
         clock.tick(FPS)
     

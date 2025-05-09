@@ -17,7 +17,7 @@ class WaveManager:
         self.time_wave_finished = None
 
         self.enemy_unlock_interval = 2
-        self.unlocked_enemy_types = ["default"]
+        self.unlocked_enemy_types = []
         self.spawn_queue = []
 
     def start_next_wave(self):
@@ -25,7 +25,7 @@ class WaveManager:
 
             # Unlock new enemy type every 5 waves
             type_keys = list(ENEMY_TYPES.keys())
-            if self.wave_number != 0 and self.wave_number % self.enemy_unlock_interval == 0 and len(self.unlocked_enemy_types) < len(type_keys):
+            if self.wave_number % self.enemy_unlock_interval == 0 and len(self.unlocked_enemy_types) < len(type_keys):
                 new_type = type_keys[len(self.unlocked_enemy_types)]
                 self.unlocked_enemy_types.append(new_type)
                 print(f"[WaveManager] Unlocked enemy type: {new_type}")
