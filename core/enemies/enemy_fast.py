@@ -1,8 +1,6 @@
-from core.enemy import Enemy
-from core.constants import PURPLE
-from pygame import Color
+from core.enemies.enemy import Enemy
 import pygame
-from .direction import Direction
+from utils.direction import Direction
 
 class FastEnemy(Enemy):
     def __init__(self, path):

@@ -1,18 +1,16 @@
 import pygame
-import sys
-from core.waveManger import WaveManager
+from core.managers.waveManger import WaveManager
 from core.map import Map
-from core.enemy import Enemy
 from core.player import Player
-from core.turret import Turret
-from core.ui_manager import UI_Manager
-from core.gold_manager import GoldManager
+from core.towers.turret import Turret
+from core.managers.ui_manager import UI_Manager
+from core.managers.gold_manager import GoldManager
 
-from core.draw_button import draw_button
+from utils.draw_button import draw_button
 from core.screens.pause_menu import pause
-from core.constants import DARKGREEN, BLACK, WHITE, GRAY, SCREEN_WIDTH, SCREEN_HEIGHT, FPS, init_tile_types, \
+from core.constants import DARKGREEN, WHITE, SCREEN_WIDTH, SCREEN_HEIGHT, FPS, init_tile_types, \
     TILESET_PATH
-from core.gameplay_configuration import ENEMY_GOLD_DROP, STARTING_GOLD, TOWER_COST, PLAYER_HP, ENEMY_DAMAGE
+from core.gameplay_configuration import STARTING_GOLD, TOWER_COST, PLAYER_HP
 import levels.maps as maps
 
 running = True

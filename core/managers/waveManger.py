@@ -1,7 +1,7 @@
 import pygame
 import random
 
-from .enemy_registry import ENEMY_TYPES
+from core.enemies.enemy_registry import ENEMY_TYPES
 
 class WaveManager:
     def __init__(self, spawn_enemy_callback, ui_manager):

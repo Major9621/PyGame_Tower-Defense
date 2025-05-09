@@ -1,6 +1,6 @@
 import pygame
-from core.draw_button import draw_button
-from core.constants import DARKGREEN,BLACK, WHITE, GRAY, SCREEN_WIDTH, SCREEN_HEIGHT, FPS
+from utils.draw_button import draw_button
+from core.constants import WHITE, SCREEN_WIDTH, SCREEN_HEIGHT
 
 running = True
 exit_gameplay = False
