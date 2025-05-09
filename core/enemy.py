@@ -4,7 +4,7 @@ from .constants import RED, GREEN, BLACK, ENEMY_RADIUS, TILE_SIZE
 from .direction import Direction
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, path):
+    def __init__(self, path, gold_manager):
         super().__init__()
         self.path = path
         self.path_index = 0
@@ -17,6 +17,7 @@ class Enemy(pygame.sprite.Sprite):
         self.direction = Direction.RIGHT
         self.flip = False
         self.gold_dropped = 10
+        self.gold_manager = gold_manager
 
         # Load sprite sheet
         self.sprite_sheet = pygame.image.load("assets/enemies/Leafbug.png").convert_alpha()
@@ -151,6 +152,8 @@ class Enemy(pygame.sprite.Sprite):
         self.state = "die"
         self.frame_index = 0
         self.animation_timer = 0
+
+        self.gold_manager.add_gold(self.gold_dropped)
 
     def isDead(self):
         return self.health <= 0
