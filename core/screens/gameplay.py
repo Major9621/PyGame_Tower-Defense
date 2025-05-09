@@ -13,6 +13,7 @@ from core.draw_button import draw_button
 from core.screens.pause_menu import pause
 from core.constants import DARKGREEN, BLACK, WHITE, GRAY, SCREEN_WIDTH, SCREEN_HEIGHT, FPS, init_tile_types, \
     TILESET_PATH
+from core.gameplay_configuration import ENEMY_GOLD_DROP, STARTING_GOLD, TOWER_COST, PLAYER_HP, ENEMY_DAMAGE
 import levels.maps as maps
 
 running = True
@@ -79,10 +80,10 @@ def play():
     enemies = pygame.sprite.Group()
     bullets = pygame.sprite.Group()
 
-    ui_manager = UI_Manager(screen, (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 5), 1, 500)
-    gold_manager = GoldManager(500, ui_manager)
+    ui_manager = UI_Manager(screen, (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 5), 1, STARTING_GOLD)
+    gold_manager = GoldManager(STARTING_GOLD, ui_manager)
     wave_system = WaveManager(lambda cls: enemies.add(cls(game_map.grid_path)), ui_manager)
-    player = Player(1000, ui_manager)
+    player = Player(PLAYER_HP, ui_manager)
     
     
     # Game loop 
@@ -101,7 +102,7 @@ def play():
             #Mouse Click
             if(event.type == pygame.MOUSEBUTTONDOWN and event.button == 1):
                 inputSystem.leftMouseClickInteraction(event.pos)
-                if gold_manager.spend_gold(200):  #Buying turret
+                if gold_manager.spend_gold(TOWER_COST):  #Buying turret
                     turrets.append(Turret(event.pos, bullets))
             
             #Pause game
@@ -123,13 +124,13 @@ def play():
         for enemy in enemies:
             enemy.update()
             if enemy.reached_end:
-                player.take_damage(50)   #Taking damage if enemy reaches end
+                player.take_damage(enemy.damage)   #Taking damage if enemy reaches end
                 enemies.remove(enemy)
                 continue
             
             
             if enemy.health <= 0:     #tu zmienione
-                gold_manager.add_gold(enemy.gold_dropped)
+                gold_manager.add_gold(enemy.gold_drop)
                 enemies.remove(enemy)
                 
         for turret in turrets:

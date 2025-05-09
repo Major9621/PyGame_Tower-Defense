@@ -1,6 +1,7 @@
 import pygame
 import math
 from .constants import RED, GREEN, BLACK, ENEMY_RADIUS, TILE_SIZE
+from .gameplay_configuration import ENEMY_GOLD_DROP, ENEMY_HEALTH, ENEMY_SPEED, ENEMY_DAMAGE
 from .direction import Direction
 
 class Enemy(pygame.sprite.Sprite):
@@ -9,14 +10,15 @@ class Enemy(pygame.sprite.Sprite):
         self.path = path
         self.path_index = 0
         self.progress = 0
-        self.speed = 1.0
-        self.health = 100
-        self.max_health = 100
+        self.damage = ENEMY_DAMAGE
+        self.speed = ENEMY_SPEED
+        self.health = ENEMY_HEALTH
+        self.max_health = ENEMY_HEALTH
         self.reached_end = False
         self.value = 10
         self.direction = Direction.RIGHT
         self.flip = False
-        self.gold_dropped = 10
+        self.gold_drop = ENEMY_GOLD_DROP
 
         # Load sprite sheet
         self.sprite_sheet = pygame.image.load("assets/enemies/Leafbug.png").convert_alpha()
