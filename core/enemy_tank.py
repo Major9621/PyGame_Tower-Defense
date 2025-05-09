@@ -9,6 +9,7 @@ class TankEnemy(Enemy):
         self.speed = 0.5
         self.health = 300
         self.max_health = 300
+        self.flip = True
         self.sprite_sheet =  pygame.image.load("assets/enemies/Magmacrab.png").convert_alpha()
         self.frame_width = self.sprite_sheet.get_width() // 10
         self.frame_height = self.sprite_sheet.get_height() // 9

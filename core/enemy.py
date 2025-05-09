@@ -4,7 +4,7 @@ from .constants import RED, GREEN, BLACK, ENEMY_RADIUS, TILE_SIZE
 from .direction import Direction
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, path, walk_type=None, death_type=None):
+    def __init__(self, path):
         super().__init__()
         self.path = path
         self.path_index = 0
@@ -15,6 +15,7 @@ class Enemy(pygame.sprite.Sprite):
         self.reached_end = False
         self.value = 10
         self.direction = Direction.RIGHT
+        self.flip = False
 
         # Load sprite sheet
         self.sprite_sheet = pygame.image.load("assets/enemies/Leafbug.png").convert_alpha()
@@ -121,7 +122,7 @@ class Enemy(pygame.sprite.Sprite):
             else:
                 self.frame_index = (self.frame_index + 1) % len(current_frames)
 
-        if self.direction == Direction.RIGHT:
+        if self.direction == Direction.RIGHT and self.flip:
             self.image = pygame.transform.flip(current_frames[self.frame_index], True, False)
         else:
             self.image = current_frames[self.frame_index]

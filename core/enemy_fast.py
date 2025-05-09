@@ -10,6 +10,7 @@ class FastEnemy(Enemy):
         self.speed = 2.0
         self.health = 50
         self.max_health = 50
+        self.flip = True
         self.sprite_sheet = pygame.image.load("assets/enemies/Scorpion.png").convert_alpha()
 
         self.frames = {
