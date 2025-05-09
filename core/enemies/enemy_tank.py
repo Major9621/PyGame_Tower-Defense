@@ -3,8 +3,8 @@ import pygame
 from utils.direction import Direction
 
 class TankEnemy(Enemy):
-    def __init__(self, path):
-        super().__init__(path)
+    def __init__(self, path, gold_manager):
+        super().__init__(path, gold_manager)
         self.speed = 0.5
         self.health = 300
         self.max_health = 300

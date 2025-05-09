@@ -3,8 +3,8 @@ import pygame
 from utils.direction import Direction
 
 class FastEnemy(Enemy):
-    def __init__(self, path):
-        super().__init__(path)
+    def __init__(self, path, gold_manger):
+        super().__init__(path, gold_manger)
         self.speed = 2.0
         self.health = 50
         self.max_health = 50
