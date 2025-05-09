@@ -1,9 +1,10 @@
 import pygame
-from .constants import BLUE, YELLOW
-from .gameplay_configuration import TOWER_RANGE, TOWER_DAMAGE, TOWER_FIRE_RATE, BULLET_SPEED
-from .bullet import Bullet
-from .enemy import Enemy
-from . import vector2 as v2
+from core.constants import BLUE, YELLOW
+from core.gameplay_configuration import TOWER_RANGE, TOWER_DAMAGE, TOWER_FIRE_RATE, BULLET_SPEED
+from core.towers.bullets.bullet import Bullet
+from core.enemies.enemy import Enemy
+from utils import vector2 as v2
+
 
 class Turret:
     def __init__(self, pos, bullets):

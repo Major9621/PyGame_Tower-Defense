@@ -1,5 +1,5 @@
 import pygame
-from .constants import BLACK, GREEN, YELLOW
+from core.constants import BLACK, GREEN, YELLOW
 
 class UI_Manager:
     def __init__(self, screen, healthBarPosition, health_default_value, gold_default_value):

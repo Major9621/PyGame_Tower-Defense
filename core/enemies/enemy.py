@@ -1,8 +1,8 @@
 import pygame
 import math
-from .constants import RED, GREEN, BLACK, ENEMY_RADIUS, TILE_SIZE
-from .gameplay_configuration import ENEMY_GOLD_DROP, ENEMY_HEALTH, ENEMY_SPEED, ENEMY_DAMAGE
-from .direction import Direction
+from core.constants import GREEN, BLACK, ENEMY_RADIUS, TILE_SIZE
+from core.gameplay_configuration import ENEMY_GOLD_DROP, ENEMY_HEALTH, ENEMY_SPEED, ENEMY_DAMAGE
+from utils.direction import Direction
 
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, path, gold_manger):

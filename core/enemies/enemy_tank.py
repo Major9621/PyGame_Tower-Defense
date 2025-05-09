@@ -1,7 +1,6 @@
-from core.enemy import Enemy
-from pygame import Color
+from core.enemies.enemy import Enemy
 import pygame
-from .direction import Direction
+from utils.direction import Direction
 
 class TankEnemy(Enemy):
     def __init__(self, path):
