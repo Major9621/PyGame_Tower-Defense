@@ -123,11 +123,6 @@ def play():
                 player.take_damage(enemy.damage)   #Taking damage if enemy reaches end
                 enemies.remove(enemy)
                 continue
-            
-            
-            # if enemy.health <= 0:     #tu zmienione
-            #     gold_manager.add_gold(enemy.gold_drop)
-            #     enemies.remove(enemy)
                 
         for turret in turrets:
             turret.update([e for e in enemies if e.state != "die"])
@@ -148,8 +143,6 @@ def play():
         screen.fill(DARKGREEN)
         game_map.draw(screen)
 
-        ui_manager.draw_health_bar()
-        ui_manager.draw_text()
         
         for enemy in enemies:
             enemy.draw(screen)
@@ -160,7 +153,13 @@ def play():
         for b in bullets:
             b.draw(screen)
 
+        ui_manager.draw_health_bar()
+        ui_manager.draw_text()
+
         pygame.display.flip()
         clock.tick(FPS)
+        
+        
+
     
     return False    #EXIT game
