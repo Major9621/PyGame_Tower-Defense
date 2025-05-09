@@ -5,7 +5,7 @@ from .gameplay_configuration import ENEMY_GOLD_DROP, ENEMY_HEALTH, ENEMY_SPEED, 
 from .direction import Direction
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, path):
+    def __init__(self, path, gold_manger):
         super().__init__()
         self.path = path
         self.path_index = 0
@@ -19,6 +19,7 @@ class Enemy(pygame.sprite.Sprite):
         self.direction = Direction.RIGHT
         self.flip = False
         self.gold_drop = ENEMY_GOLD_DROP
+        self.gold_manger = gold_manger
 
         # Load sprite sheet
         self.sprite_sheet = pygame.image.load("assets/enemies/Leafbug.png").convert_alpha()
@@ -153,6 +154,7 @@ class Enemy(pygame.sprite.Sprite):
         self.state = "die"
         self.frame_index = 0
         self.animation_timer = 0
+        self.gold_manger.add_gold(self.gold_drop)
 
     def isDead(self):
         return self.health <= 0

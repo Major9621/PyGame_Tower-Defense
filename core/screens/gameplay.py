@@ -1,6 +1,5 @@
 import pygame
 import sys
-from core import inputSystem
 from core.waveManger import WaveManager
 from core.map import Map
 from core.enemy import Enemy
@@ -82,7 +81,7 @@ def play():
 
     ui_manager = UI_Manager(screen, (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 5), 1, STARTING_GOLD)
     gold_manager = GoldManager(STARTING_GOLD, ui_manager)
-    wave_system = WaveManager(lambda cls: enemies.add(cls(game_map.grid_path)), ui_manager)
+    wave_system = WaveManager(lambda cls: enemies.add(cls(game_map.grid_path, gold_manager)), ui_manager)
     player = Player(PLAYER_HP, ui_manager)
     
     
@@ -101,7 +100,6 @@ def play():
             
             #Mouse Click
             if(event.type == pygame.MOUSEBUTTONDOWN and event.button == 1):
-                inputSystem.leftMouseClickInteraction(event.pos)
                 if gold_manager.spend_gold(TOWER_COST):  #Buying turret
                     turrets.append(Turret(event.pos, bullets))
             
@@ -129,9 +127,9 @@ def play():
                 continue
             
             
-            if enemy.health <= 0:     #tu zmienione
-                gold_manager.add_gold(enemy.gold_drop)
-                enemies.remove(enemy)
+            # if enemy.health <= 0:     #tu zmienione
+            #     gold_manager.add_gold(enemy.gold_drop)
+            #     enemies.remove(enemy)
                 
         for turret in turrets:
             turret.update([e for e in enemies if e.state != "die"])
