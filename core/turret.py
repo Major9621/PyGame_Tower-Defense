@@ -1,5 +1,6 @@
 import pygame
 from .constants import BLUE, YELLOW
+from .gameplay_configuration import TOWER_RANGE, TOWER_DAMAGE, TOWER_FIRE_RATE, BULLET_SPEED
 from .bullet import Bullet
 from .enemy import Enemy
 from . import vector2 as v2
@@ -8,15 +9,14 @@ class Turret:
     def __init__(self, pos, bullets):
         self.pos = pos
         self.lastShotTime = pygame.time.get_ticks()
-        self.range = 150
-        self.hp = 100
+        self.range = TOWER_RANGE
         self.currentEnemy = None
         self.bullets = bullets
         self.image = pygame.image.load("assets/towers/Idle/1.png").convert_alpha()
 
-    bulletDamage = 10
-    bulletSpeed = 10
-    shotsPerSecond = 3
+    bulletDamage = TOWER_DAMAGE
+    bulletSpeed = BULLET_SPEED
+    shotsPerSecond = TOWER_FIRE_RATE
     shootInterval = 1000 / shotsPerSecond
     
     
