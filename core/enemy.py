@@ -16,6 +16,7 @@ class Enemy(pygame.sprite.Sprite):
         self.value = 10
         self.direction = Direction.RIGHT
         self.flip = False
+        self.gold_dropped = 10
 
         # Load sprite sheet
         self.sprite_sheet = pygame.image.load("assets/enemies/Leafbug.png").convert_alpha()
