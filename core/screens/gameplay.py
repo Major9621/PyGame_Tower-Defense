@@ -120,7 +120,11 @@ def play():
                     elif result[1] == False:
                         exit_gameplay = True
                         return True
-        
+
+            if event.type == pygame.USEREVENT:
+                if hasattr(event, 'enemy'):
+                    enemies.add(event.enemy)
+                    
         if exit_gameplay:   #Exit to main menu
             return True
 
