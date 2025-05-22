@@ -72,6 +72,16 @@ def play():
             
             pygame.display.update()
     
+    def try_place_turret(pos):
+        snapped_pos = Turret.snap_to_grid(pos)
+        if Turret.can_place_turret(snapped_pos, turrets, game_map.grid_path):
+            if gold_manager.spend_gold(TOWER_COST):
+                new_turret = Turret(snapped_pos, bullets)
+                turrets.append(new_turret)
+                return True
+        return False
+
+
     game_map = Map(maps.grid_path2)
     turrets = []
     enemies = pygame.sprite.Group()
@@ -98,8 +108,7 @@ def play():
             
             #Mouse Click
             if(event.type == pygame.MOUSEBUTTONDOWN and event.button == 1):
-                if gold_manager.spend_gold(TOWER_COST):  #Buying turret
-                    turrets.append(Turret(event.pos, bullets))
+                try_place_turret(event.pos)
             
             #Pause game
             elif event.type == pygame.KEYDOWN:
