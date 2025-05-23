@@ -10,7 +10,8 @@ class ShieldedEnemy(Enemy):
         self.max_health = self.health
         self.shield_active = True
         self.shield_health = ENEMY_HEALTH
-        self.sprite_sheet = pygame.image.load("assets/enemies/Leafbug.png").convert_alpha()
+        self.sprite_sheet = pygame.image.load("assets/enemies/Shield.png").convert_alpha()
+        self.flip_sprite = True
 
     def take_damage(self, damage):
         if self.shield_active:

@@ -12,7 +12,8 @@ class HealerEnemy(Enemy):
         self.heal_amount = 20
         self.heal_cooldown = 2000  # milliseconds
         self.last_heal = pygame.time.get_ticks()
-        self.sprite_sheet = pygame.image.load("assets/enemies/Leafbug.png").convert_alpha()
+        self.sprite_sheet = pygame.image.load("assets/enemies/Healer.png").convert_alpha()
+        self.flip_sprite = True
 
     def update(self):
         current_time = pygame.time.get_ticks()

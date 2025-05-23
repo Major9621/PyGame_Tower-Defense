@@ -15,7 +15,7 @@ class TeleporterEnemy(Enemy):
         self.is_stunned = False
         self.original_speed = ENEMY_SPEED * 0.8
         self.cooldown_progress = 0
-        self.sprite_sheet = pygame.image.load("assets/enemies/Leafbug.png").convert_alpha()
+        self.sprite_sheet = pygame.image.load("assets/enemies/Teleporter.png").convert_alpha()
 
     def update(self):
         current_time = pygame.time.get_ticks()
