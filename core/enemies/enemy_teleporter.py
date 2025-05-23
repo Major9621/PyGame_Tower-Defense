@@ -9,13 +9,29 @@ class TeleporterEnemy(Enemy):
         super().__init__(path, gold_manager)
         self.health = ENEMY_HEALTH * 0.8
         self.max_health = self.health
-        self.teleport_cooldown = 5000
-        self.stun_duration = 3000
-        self.last_teleport = 0
+        self.teleport_cooldown = 3000
+        self.stun_duration = 1000
+        self.last_teleport = pygame.time.get_ticks()
         self.is_stunned = False
         self.original_speed = ENEMY_SPEED * 0.8
         self.cooldown_progress = 0
         self.sprite_sheet = pygame.image.load("assets/enemies/Teleporter.png").convert_alpha()
+        self.flip = True
+
+        self.frames = {
+            "walk": {
+                Direction.DOWN: self.load_frames(row=3, count=8),
+                Direction.UP: self.load_frames(row=4, count=8),
+                Direction.LEFT: self.load_frames(row=5, count=8),
+                Direction.RIGHT: self.load_frames(row=5, count=8),
+            },
+            "die": {
+                Direction.DOWN: self.load_frames(row=6, count=8),
+                Direction.UP: self.load_frames(row=7, count=8),
+                Direction.LEFT: self.load_frames(row=8, count=8),
+                Direction.RIGHT: self.load_frames(row=8, count=8),
+            }
+        }
 
     def update(self):
         current_time = pygame.time.get_ticks()

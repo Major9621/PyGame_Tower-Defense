@@ -13,7 +13,21 @@ class HealerEnemy(Enemy):
         self.heal_cooldown = 2000  # milliseconds
         self.last_heal = pygame.time.get_ticks()
         self.sprite_sheet = pygame.image.load("assets/enemies/Healer.png").convert_alpha()
-        self.flip_sprite = True
+        self.flip = True
+        self.frames = {
+            "walk": {
+                Direction.DOWN: self.load_frames(row=3, count=8),
+                Direction.UP: self.load_frames(row=4, count=8),
+                Direction.LEFT: self.load_frames(row=5, count=8),
+                Direction.RIGHT: self.load_frames(row=5, count=8),
+            },
+            "die": {
+                Direction.DOWN: self.load_frames(row=6, count=8),
+                Direction.UP: self.load_frames(row=7, count=8),
+                Direction.LEFT: self.load_frames(row=8, count=8),
+                Direction.RIGHT: self.load_frames(row=8, count=8),
+            }
+        }
 
     def update(self):
         current_time = pygame.time.get_ticks()
@@ -30,5 +44,5 @@ class HealerEnemy(Enemy):
 
     def draw(self, surface):
         super().draw(surface)
-        if pygame.time.get_ticks() - self.last_heal < 500:  # Show heal effect for 500ms
+        if pygame.time.get_ticks() - self.last_heal < 500:
             pygame.draw.circle(surface, (0, 255, 0), self.position, self.heal_range, 1)
