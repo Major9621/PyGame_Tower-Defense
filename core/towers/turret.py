@@ -1,14 +1,14 @@
 import pygame
-from core.constants import BLUE, YELLOW
+from core.constants import BLUE, YELLOW, TILE_SIZE
 from core.gameplay_configuration import TOWER_RANGE, TOWER_DAMAGE, TOWER_FIRE_RATE, BULLET_SPEED
 from core.towers.bullets.bullet import Bullet
 from core.enemies.enemy import Enemy
 from utils import vector2 as v2
 
-
+#TODO: Add grid snapping and disable turret stacking
 class Turret:
     def __init__(self, pos, bullets):
-        self.pos = pos
+        self.pos = self.snap_to_grid(pos)
         self.lastShotTime = pygame.time.get_ticks()
         self.range = TOWER_RANGE
         self.currentEnemy = None
@@ -20,7 +20,40 @@ class Turret:
     shotsPerSecond = TOWER_FIRE_RATE
     shootInterval = 1000 / shotsPerSecond
     
-    
+    @staticmethod
+    def snap_to_grid(pos):
+        cell_size = TILE_SIZE * 2
+        x = (pos[0] // cell_size) * cell_size + cell_size // 2
+        y = (pos[1] // cell_size) * cell_size + cell_size // 2
+        return (x, y)
+
+    @staticmethod
+    def can_place_turret(pos, existing_turrets, grid_path):
+        snapped_pos = Turret.snap_to_grid(pos)
+        
+        cell_size = TILE_SIZE * 2
+        grid_x = snapped_pos[0] // cell_size
+        grid_y = snapped_pos[1] // cell_size
+        
+        for i in range(0, len(grid_path) - 1):
+            x1, y1 = grid_path[i]
+            x2, y2 = grid_path[i + 1]
+            
+            if y1 == y2 and y1 == grid_y:
+                if min(x1, x2) <= grid_x <= max(x1, x2):
+                    return False
+                    
+            if x1 == x2 and x1 == grid_x:
+                if min(y1, y2) <= grid_y <= max(y1, y2):
+                    return False
+        
+        for turret in existing_turrets:
+            if turret.pos == snapped_pos:
+                return False
+                
+        return True
+
+
     def update(self, enemies):
         currentTime = pygame.time.get_ticks()
         

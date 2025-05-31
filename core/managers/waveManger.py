@@ -11,10 +11,10 @@ class WaveManager:
         self.wave_in_progress = False
         self.ready_for_next_wave = True
 
-        self.spawn_interval = 1000
+        self.spawn_interval = 400
         self.last_spawn_time = 0
 
-        self.auto_wave_delay = 5000
+        self.auto_wave_delay = 3000
         self.time_wave_finished = None
 
         self.enemy_unlock_interval = 2
