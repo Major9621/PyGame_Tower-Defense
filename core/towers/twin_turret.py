@@ -19,6 +19,11 @@ class TwinTurret(Turret):
     shootInterval = 1000 / shotsPerSecond
     upgradeCategory = ShopUpgradeCategory.TWIN
     
+    def shoot(self, direction_to_enemy, fire_pos):
+        bullet = Bullet(fire_pos, direction_to_enemy, self.bulletDamage, self.bullet_speed, self.bullet_color)
+        self.bullets.add(bullet)
+        self.sound_manager.play_random_shot()
+    
     def update(self, enemies):
         current_time = pygame.time.get_ticks()
 
@@ -35,7 +40,7 @@ class TwinTurret(Turret):
 
                 # Bullet offset
                 perpendicular = (-direction_to_enemy[1], direction_to_enemy[0])
-                offset_amount = 10 
+                offset_amount = 10
 
                 if self.fire_side == 0:
                     fire_pos = (
@@ -51,7 +56,7 @@ class TwinTurret(Turret):
                     self.fire_side = 0
 
                 # Fire
-                self.shoot(direction_to_enemy)
+                self.shoot(direction_to_enemy, fire_pos)
 
                 self.last_shot_time = current_time
 

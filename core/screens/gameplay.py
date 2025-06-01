@@ -121,17 +121,21 @@ def play():
                     else:
                         for turret in turrets:
                             if turret.is_clicked(event.pos):
-                                if turret.upgradeCategory == turret_shop.shop_category:
+                                if turret.upgradeCategory == turret_shop.shop_category and turret_shop.shop_category != ShopUpgradeCategory.NONE and turret_shop.selected_item != None and gold_manager.enough_gold(turret_shop.selected_item.price):
                                     destroyed_position = turret.pos
                                     destroy_turret(turret)
                                     try_place_turret(destroyed_position, turret_shop.selected_item.prefab)
-                                    print("new turret placed")
                                     turret_shop.shop_category = ShopUpgradeCategory.NONE
                                     turret_shop.deselect_all_items()
                                 break
                         
-                        try_place_turret(event.pos)
-                        turret_shop.shop_category = ShopUpgradeCategory.NONE
+                        if turret_shop.shop_category == ShopUpgradeCategory.NONE and turret_shop.selected_item != None and gold_manager.enough_gold(turret_shop.selected_item.price):
+                            try_place_turret(event.pos)
+                        
+                        if turret_shop.shop_category != ShopUpgradeCategory.NONE:
+                            turret_shop.shop_category = ShopUpgradeCategory.NONE
+                            turret_shop.deselect_all_items()
+                        
                 elif event.button == 3:  # Right click
                     new_category = ShopUpgradeCategory.NONE
                     for turret in turrets:

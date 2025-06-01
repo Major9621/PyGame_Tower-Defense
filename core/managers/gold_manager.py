@@ -5,6 +5,9 @@ class GoldManager:
     def __init__(self, initial_currency, ui_manager):
         self.ui_manager = ui_manager
         self.gold_amount = initial_currency
+        
+    def enough_gold(self, amount):
+        return self.gold_amount >= amount
 
     def add_gold(self, amount):
         self.gold_amount += amount
