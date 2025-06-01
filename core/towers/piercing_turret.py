@@ -3,13 +3,13 @@ from core.gameplay_configuration import PIERCING_BULLET_SPEED, PIERCING_TOWER_DA
 from core.towers.bullets.piercing_bullet import PiercingBullet
 from core.enemies.enemy import Enemy
 from utils import vector2 as v2
-from core.constants import RED
+from core.constants import RED, PURPLE
 from core.towers.turret import Turret
 from core.towers.shop.shop_category import ShopUpgradeCategory
 
 class PiercingTurret(Turret):
-    def __init__(self, position, bullets):
-        super().__init__(position, bullets)
+    def __init__(self, position, bullets, sound_manager):
+        super().__init__(position, bullets, sound_manager)
         self.image = pygame.image.load("assets/towers/Idle/piercing.png").convert_alpha()
         self.bullet_color = RED
         self.range = PIERCING_TOWER_RANGE
@@ -39,3 +39,7 @@ class PiercingTurret(Turret):
     def shoot(self, direction_to_enemy):
         bullet = PiercingBullet(self.pos, direction_to_enemy, self.bullet_damage, self.bullet_speed, self.bullet_color)
         self.bullets.add(bullet)
+        self.sound_manager.play_random_shoot()
+
+    def draw_targeting_radius(self, surface):
+        pygame.draw.circle(surface, PURPLE, self.pos, self.range, 1)

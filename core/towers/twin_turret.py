@@ -2,13 +2,13 @@ import pygame
 from core.gameplay_configuration import TWIN_TOWER_COST, TWIN_TOWER_RANGE, TWIN_TOWER_DAMAGE, TWIN_TOWER_FIRE_RATE, BULLET_SPEED
 from core.towers.turret import Turret
 from core.towers.bullets.bullet import Bullet
-from core.constants import BLUE
+from core.constants import BLUE, GREEN
 from utils import vector2 as v2
 from core.towers.shop.shop_category import ShopUpgradeCategory
 
 class TwinTurret(Turret):
-    def __init__(self, position, bullets):
-        super().__init__(position, bullets)
+    def __init__(self, position, bullets, sound_manager):
+        super().__init__(position, bullets, sound_manager)
         self.bullet_color = BLUE
         self.image = pygame.image.load("assets/towers/Idle/twin.png").convert_alpha()
         self.fire_side = 0  # 0 for left, 1 for right
@@ -54,3 +54,7 @@ class TwinTurret(Turret):
                 self.shoot(direction_to_enemy)
 
                 self.last_shot_time = current_time
+
+
+    def draw_targeting_radius(self, surface):
+        pygame.draw.circle(surface, GREEN, self.pos, self.range, 1)

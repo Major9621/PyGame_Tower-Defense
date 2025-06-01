@@ -7,6 +7,7 @@ from core.managers.ui_manager import UI_Manager
 from core.managers.gold_manager import GoldManager
 from core.towers.shop.turret_shop import TurretShop
 from core.towers.shop.shop_category import ShopUpgradeCategory
+from core.managers.sound_manager import SoundManager
 
 from utils.draw_button import draw_button
 from core.screens.pause_menu import pause
@@ -73,7 +74,7 @@ def play():
         snapped_pos = Turret.snap_to_grid(pos)
         if Turret.can_place_turret(snapped_pos, turrets, game_map.grid_path) and turret_shop.selected_item != None:
             if gold_manager.spend_gold(turret_shop.selected_item.price):
-                new_turret = turret_shop.selected_item.prefab(snapped_pos, bullets)
+                new_turret = turret_shop.selected_item.prefab(snapped_pos, bullets, sound_manager)
                 turrets.append(new_turret)
                 turret_shop.deselect_all_items()  
                 return True
@@ -85,6 +86,7 @@ def play():
             
 
     game_map = Map(maps.grid_path2)
+    sound_manager = SoundManager()
     turrets = []
     enemies = pygame.sprite.Group()
     bullets = pygame.sprite.Group()
@@ -98,6 +100,7 @@ def play():
     show_turret_range = False
     
     # Game loop 
+    sound_manager.play_music()
     while running:
         current_time = pygame.time.get_ticks()
 
@@ -186,7 +189,7 @@ def play():
             for enemy in enemies_hit:
                 if not bullet.on_hit(enemy):
                     break
-                
+        
         
         
         # Draw everything

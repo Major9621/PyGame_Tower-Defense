@@ -1,6 +1,6 @@
 import pygame
 import math
-from core.constants import BLUE, YELLOW, TILE_SIZE
+from core.constants import BLUE, YELLOW, TILE_SIZE, GRAY, WHITE
 from core.gameplay_configuration import TOWER_RANGE, TOWER_DAMAGE, TOWER_FIRE_RATE, BULLET_SPEED
 from core.towers.bullets.bullet import Bullet
 from core.enemies.enemy import Enemy
@@ -8,7 +8,7 @@ from utils import vector2 as v2
 from core.towers.shop.shop_category import ShopUpgradeCategory
 
 class Turret:
-    def __init__(self, pos, bullets):
+    def __init__(self, pos, bullets, sound_manager):
         self.pos = self.snap_to_grid(pos)
         self.last_shot_time = pygame.time.get_ticks()
         self.range = TOWER_RANGE
@@ -17,6 +17,7 @@ class Turret:
         self.bullet_color = YELLOW
         self.image = pygame.image.load("assets/towers/Idle/basic.png").convert_alpha()
         self.rect = self.image.get_rect(center=(self.pos[0], self.pos[1] + 32), size=(70, 70))
+        self.sound_manager = sound_manager
 
     bulletDamage = TOWER_DAMAGE
     bullet_speed = BULLET_SPEED
@@ -117,6 +118,7 @@ class Turret:
     def shoot(self, direction_to_enemy):
         bullet = Bullet(self.pos, direction_to_enemy, self.bulletDamage, self.bullet_speed, self.bullet_color)
         self.bullets.add(bullet)
+        self.sound_manager.play_random_shot()
 
     def update(self, enemies):
         current_time = pygame.time.get_ticks()
@@ -151,5 +153,5 @@ class Turret:
         
     
     def draw_targeting_radius(self, surface):
-        pygame.draw.circle(surface, BLUE, self.pos, self.range, 1)
+        pygame.draw.circle(surface, WHITE, self.pos, self.range, 1)
 

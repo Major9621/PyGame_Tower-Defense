@@ -9,8 +9,8 @@ from core.towers.bullets.bomber_bullet import BomberBullet
 from core.towers.shop.shop_category import ShopUpgradeCategory
 
 class BomberTurret(Turret):
-    def __init__(self, position, bullets):
-        super().__init__(position, bullets)
+    def __init__(self, position, bullets, sound_manager):
+        super().__init__(position, bullets, sound_manager)
         self.image = pygame.image.load("assets/towers/Idle/bomber.png").convert_alpha()
         self.bullet_color = RED
         self.range = BOMBER_TOWER_RANGE
@@ -25,6 +25,7 @@ class BomberTurret(Turret):
     def shoot(self, direction_to_enemy, enemies):
         bullet = BomberBullet(self.pos, direction_to_enemy, self.bulletDamage, self.bullet_speed, self.bullet_color, enemies)
         self.bullets.add(bullet)
+        self.sound_manager.play_random_shot()
     
     
     def update(self, enemies):
@@ -67,3 +68,5 @@ class BomberTurret(Turret):
                     
                 self.current_enemy = max_hp_enemy
     
+    def draw_targeting_radius(self, surface):
+        pygame.draw.circle(surface, RED, self.pos, self.range, 1)

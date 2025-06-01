@@ -3,16 +3,17 @@ from core.gameplay_configuration import SNIPER_TOWER_DAMAGE, SNIPER_TOWER_RANGE,
 from core.towers.bullets.bullet import Bullet
 from core.enemies.enemy import Enemy
 from utils import vector2 as v2
-from core.constants import RED
+from core.constants import RED, ORANGE, YELLOW
 from core.towers.turret import Turret
 from core.towers.shop.shop_category import ShopUpgradeCategory
 
 class SniperTurret(Turret):
-    def __init__(self, position, bullets):
-        super().__init__(position, bullets)
+    def __init__(self, position, bullets, sound_manager):
+        super().__init__(position, bullets, sound_manager)
         self.image = pygame.image.load("assets/towers/Idle/sniper.png").convert_alpha()
         self.bullet_color = RED
         self.range = SNIPER_TOWER_RANGE
+        self.radius_color = YELLOW
 
     bulletDamage = SNIPER_TOWER_DAMAGE
     bulletSpeed = SNIPER_TOWER_BULLET_SPEED
@@ -35,3 +36,6 @@ class SniperTurret(Turret):
                     
                 self.current_enemy = max_hp_enemy
     
+
+    def draw_targeting_radius(self, surface):
+        pygame.draw.circle(surface, YELLOW, self.pos, self.range, 1)

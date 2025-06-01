@@ -1,12 +1,13 @@
 import pygame
 from core.towers.turret import Turret
 from core.towers.shop.shop_category import ShopUpgradeCategory
+from core.constants import BLUE
 from utils import vector2 as v2
 from core.gameplay_configuration import FREEZE_TOWER_RANGE, FREEZE_DURATION, FREEZE_FIRE_RATE, FREEZE_MIN_ENEMIES_IN_RANGE
 
 class FreezeTurret(Turret):
-    def __init__(self, position, bullets):
-        super().__init__(position, bullets)
+    def __init__(self, position, bullets, sound_manager):
+        super().__init__(position, bullets, sound_manager)
         self.image = pygame.image.load("assets/towers/Idle/freeze.png").convert_alpha()
         self.range = FREEZE_TOWER_RANGE
         self.freeze_duration = FREEZE_DURATION * 1000
@@ -45,3 +46,6 @@ class FreezeTurret(Turret):
         for enemy in enemies_to_freeze:
             enemy.can_move = False
             self.frozen_enemies[enemy] = current_time
+    
+    def draw_targeting_radius(self, surface):
+        pygame.draw.circle(surface, BLUE, self.pos, self.range, 1)

@@ -36,6 +36,11 @@ class Bullet(pygame.sprite.Sprite):
 
     def update(self, bullets):
         # Move the bullet
+        if self.dir is None:
+            self.kill()
+            return
+
+
         self.pos = (
             self.pos[0] + self.dir[0] * self.speed,
             self.pos[1] + self.dir[1] * self.speed
