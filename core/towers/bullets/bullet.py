@@ -1,5 +1,5 @@
 import pygame
-
+from core.gameplay_configuration import BULLET_DESPAWN_TIME
 
 def load_bullet_frames(sheet, start_x, start_y, frame_width, frame_height, frame_count):
     frames = []
@@ -31,6 +31,8 @@ class Bullet(pygame.sprite.Sprite):
 
         self.image = self.frames[self.current_frame]
         self.rect = self.image.get_rect(center=self.pos)
+    
+    despawn_time = BULLET_DESPAWN_TIME  # seconds before the bullet despawns
 
     def update(self, bullets):
         # Move the bullet
@@ -47,9 +49,14 @@ class Bullet(pygame.sprite.Sprite):
             self.image = self.frames[self.current_frame]
             self.last_frame_time = current_time
 
-        # Remove bullet after 5 seconds
-        if current_time - self.spawnTime >= 5000:
-            bullets.remove(self)
+        if current_time - self.spawnTime >= 1000 * self.despawn_time:
+            print("Bullet despawned")
+            self.kill()
+        
+    def on_hit(self, enemy):
+        self.kill()
+        enemy.take_damage(self.damage)
+        return False # Should be removed
 
     def draw(self, surface):
         rect = self.image.get_rect(center=self.pos)

@@ -5,7 +5,8 @@ from core.player import Player
 from core.towers.turret import Turret
 from core.managers.ui_manager import UI_Manager
 from core.managers.gold_manager import GoldManager
-from core.towers.turret_shop import TurretShop
+from core.towers.shop.turret_shop import TurretShop
+from core.towers.shop.shop_category import ShopUpgradeCategory
 
 from utils.draw_button import draw_button
 from core.screens.pause_menu import pause
@@ -27,12 +28,6 @@ def play():
     init_tile_types(TILESET_PATH)
     clock = pygame.time.Clock()
     font = pygame.font.SysFont("Arial-Bold", 50)
-    
-    #Drawing Buttons
-
-    
-    #Pause 
-    
     
     #Game over
     def game_over():
@@ -74,7 +69,7 @@ def play():
             
             pygame.display.update()
     
-    def try_place_turret(pos):
+    def try_place_turret(pos, turret_class=Turret):
         snapped_pos = Turret.snap_to_grid(pos)
         if Turret.can_place_turret(snapped_pos, turrets, game_map.grid_path) and turret_shop.selected_item != None:
             if gold_manager.spend_gold(turret_shop.selected_item.price):
@@ -83,7 +78,11 @@ def play():
                 turret_shop.deselect_all_items()  
                 return True
         return False
-
+    
+    def destroy_turret(turret):
+        if turret in turrets:
+            turrets.remove(turret)
+            
 
     game_map = Map(maps.grid_path2)
     turrets = []
@@ -112,11 +111,35 @@ def play():
                 running = False
             
             #Mouse Click
-            if(event.type == pygame.MOUSEBUTTONDOWN and event.button == 1):
-                if turret_shop.handle_click(event.pos):
-                    pass
-                else:
-                    try_place_turret(event.pos)
+            if(event.type == pygame.MOUSEBUTTONDOWN):
+                if event.button == 1:  # Left click
+                    if turret_shop.handle_click(event.pos):
+                        pass
+                    else:
+                        for turret in turrets:
+                            if turret.is_clicked(event.pos):
+                                if turret.upgradeCategory == turret_shop.shop_category:
+                                    destroyed_position = turret.pos
+                                    destroy_turret(turret)
+                                    try_place_turret(destroyed_position, turret_shop.selected_item.prefab)
+                                    print("new turret placed")
+                                    turret_shop.shop_category = ShopUpgradeCategory.NONE
+                                    turret_shop.deselect_all_items()
+                                break
+                        
+                        try_place_turret(event.pos)
+                        turret_shop.shop_category = ShopUpgradeCategory.NONE
+                elif event.button == 3:  # Right click
+                    new_category = ShopUpgradeCategory.NONE
+                    for turret in turrets:
+                        if turret.is_clicked(event.pos):
+                            new_category = turret.upgradeCategory
+                            break
+                    
+                    turret_shop.shop_category = new_category
+                    turret_shop.deselect_all_items()
+                    
+                
             
             #Pause game
             elif event.type == pygame.KEYDOWN:
@@ -161,9 +184,9 @@ def play():
         for bullet in bullets:
             enemies_hit = pygame.sprite.spritecollide(bullet, enemies, False)
             for enemy in enemies_hit:
+                if not bullet.on_hit(enemy):
+                    break
                 
-                enemy.take_damage(bullet.damage)
-                bullets.remove(bullet)
         
         
         # Draw everything
@@ -191,6 +214,4 @@ def play():
         clock.tick(FPS)
         
         
-
-    
     return False    #EXIT game

@@ -1,23 +1,28 @@
 import pygame
+import math
 from core.constants import BLUE, YELLOW, TILE_SIZE
 from core.gameplay_configuration import TOWER_RANGE, TOWER_DAMAGE, TOWER_FIRE_RATE, BULLET_SPEED
 from core.towers.bullets.bullet import Bullet
 from core.enemies.enemy import Enemy
 from utils import vector2 as v2
+from core.towers.shop.shop_category import ShopUpgradeCategory
 
 class Turret:
     def __init__(self, pos, bullets):
         self.pos = self.snap_to_grid(pos)
-        self.lastShotTime = pygame.time.get_ticks()
+        self.last_shot_time = pygame.time.get_ticks()
         self.range = TOWER_RANGE
-        self.currentEnemy = None
+        self.current_enemy = None
         self.bullets = bullets
-        self.image = pygame.image.load("assets/towers/Idle/1.png").convert_alpha()
+        self.bullet_color = YELLOW
+        self.image = pygame.image.load("assets/towers/Idle/basic.png").convert_alpha()
+        self.rect = self.image.get_rect(center=(self.pos[0], self.pos[1] + 32), size=(70, 70))
 
     bulletDamage = TOWER_DAMAGE
-    bulletSpeed = BULLET_SPEED
+    bullet_speed = BULLET_SPEED
     shotsPerSecond = TOWER_FIRE_RATE
     shootInterval = 1000 / shotsPerSecond
+    upgradeCategory = ShopUpgradeCategory.BASIC
     
     @staticmethod
     def snap_to_grid(pos):
@@ -51,17 +56,13 @@ class Turret:
                 return False
                 
         return True
+    
+    def is_clicked(self, mouse_pos):
+        return self.rect.collidepoint(mouse_pos)
 
-
-    def update(self, enemies):
-        currentTime = pygame.time.get_ticks()
-        
-        
-        #If is able to shoot
-        if currentTime - self.lastShotTime >= self.shootInterval: 
-            
-            #Looking for new (closest) enemy
-            if self.currentEnemy == None or (self.currentEnemy != None and self.currentEnemy.isDead()):
+    def look_for_enemies(self, enemies):
+    
+        if self.current_enemy == None or (self.current_enemy != None and self.current_enemy.isDead()):
                 lowest_hp_enemy = None
                 for en in enemies:
                     en: Enemy
@@ -72,27 +73,77 @@ class Turret:
                         else:
                             lowest_hp_enemy = en
                     
-                self.currentEnemy = lowest_hp_enemy
+                self.current_enemy = lowest_hp_enemy
+
+
+
+    def predict_leading_direction(self, enemy):
+        # Dane wejściowe
+        shooter_pos = pygame.math.Vector2(self.pos)
+        enemy_pos = pygame.math.Vector2(enemy.position)
+
+        # Szacuj wektor prędkości przeciwnika na podstawie kierunku ruchu
+        if enemy.path_index < len(enemy.path) - 1:
+            start = pygame.math.Vector2(enemy.tile_to_pixel(enemy.path[enemy.path_index]))
+            end = pygame.math.Vector2(enemy.tile_to_pixel(enemy.path[enemy.path_index + 1]))
+            enemy_velocity = (end - start).normalize() * enemy.speed
+        else:
+            return None  # przeciwnik już kończy trasę
+
+        relative_pos = enemy_pos - shooter_pos
+        a = enemy_velocity.dot(enemy_velocity) - self.bullet_speed ** 2
+        b = 2 * relative_pos.dot(enemy_velocity)
+        c = relative_pos.dot(relative_pos)
+
+        discriminant = b ** 2 - 4 * a * c
+
+        if discriminant < 0 or abs(a) < 1e-6:
+            # Nie da się trafić – strzelaj w aktualną pozycję
+            return (enemy_pos - shooter_pos).normalize()
+
+        sqrt_discriminant = math.sqrt(discriminant)
+        t1 = (-b + sqrt_discriminant) / (2 * a)
+        t2 = (-b - sqrt_discriminant) / (2 * a)
+
+        t = min(t for t in [t1, t2] if t > 0) if any(t > 0 for t in [t1, t2]) else None
+
+        if t is None:
+            return (enemy_pos - shooter_pos).normalize()
+
+        future_enemy_pos = enemy_pos + enemy_velocity * t
+        return (future_enemy_pos - shooter_pos).normalize()
+
+
+    def shoot(self, direction_to_enemy):
+        bullet = Bullet(self.pos, direction_to_enemy, self.bulletDamage, self.bullet_speed, self.bullet_color)
+        self.bullets.add(bullet)
+
+    def update(self, enemies):
+        current_time = pygame.time.get_ticks()
+        
+        
+        #If is able to shoot
+        if current_time - self.last_shot_time >= self.shootInterval: 
+            
+            #Looking for new enemy
+            self.look_for_enemies(enemies)
                 
             #If has enemy or just found it calculate shoot direction
-            if self.currentEnemy != None:
-                directionToEnemy = v2.normalized(v2.subtract(self.currentEnemy.position, self.pos))
-                distanceToEnemy = v2.distance(self.currentEnemy.position, self.pos)
+            if self.current_enemy != None:
+                direction_to_enemy = direction_to_enemy = self.predict_leading_direction(self.current_enemy)
+                distance_to_enemy = v2.distance(self.current_enemy.position, self.pos)
                 
-                if self.currentEnemy.reached_end or distanceToEnemy > self.range:
-                    self.currentEnemy = None
+                if self.current_enemy.reached_end or distance_to_enemy > self.range:
+                    self.current_enemy = None
                 
                 #Shoot!
-                bullet = Bullet(self.pos, directionToEnemy, self.bulletDamage, self.bulletSpeed, YELLOW)
-                self.bullets.add(bullet)
+                self.shoot(direction_to_enemy)
                 
-                self.lastShotTime = currentTime
+                self.last_shot_time = current_time
             else:
-                directionToEnemy = None
-                distanceToEnemy = None
+                direction_to_enemy = None
+                distance_to_enemy = None
             
-            
-
     
     def draw(self, surface):
         rect = self.image.get_rect(center=(self.pos[0], self.pos[1] - 32))

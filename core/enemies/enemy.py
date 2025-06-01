@@ -20,6 +20,7 @@ class Enemy(pygame.sprite.Sprite):
         self.flip = False
         self.gold_drop = ENEMY_GOLD_DROP
         self.gold_manger = gold_manger
+        self.can_move = True
 
         # Load sprite sheet
         self.sprite_sheet = pygame.image.load("assets/enemies/Leafbug.png").convert_alpha()
@@ -78,7 +79,7 @@ class Enemy(pygame.sprite.Sprite):
                 self.kill()
             return
 
-        if self.reached_end or self.health <= 0:
+        if self.reached_end or self.health <= 0 or not self.can_move:
             return
 
         if self.path_index >= len(self.path) - 1:
