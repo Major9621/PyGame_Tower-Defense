@@ -5,7 +5,6 @@ from core.towers.bullets.bullet import Bullet
 from core.enemies.enemy import Enemy
 from utils import vector2 as v2
 
-#TODO: Add grid snapping and disable turret stacking
 class Turret:
     def __init__(self, pos, bullets):
         self.pos = self.snap_to_grid(pos)
@@ -63,17 +62,17 @@ class Turret:
             
             #Looking for new (closest) enemy
             if self.currentEnemy == None or (self.currentEnemy != None and self.currentEnemy.isDead()):
-                closestEnemy = None
+                lowest_hp_enemy = None
                 for en in enemies:
                     en: Enemy
                     if(v2.distance(en.position, self.pos) <= self.range):
-                        if closestEnemy != None:
-                            if v2.distance(closestEnemy.position, self.pos) > v2.distance(en.position, self.pos):
-                                closestEnemy = en
+                        if lowest_hp_enemy != None:
+                            if lowest_hp_enemy.health > lowest_hp_enemy.health:
+                                lowest_hp_enemy = en
                         else:
-                            closestEnemy = en
+                            lowest_hp_enemy = en
                     
-                self.currentEnemy = closestEnemy
+                self.currentEnemy = lowest_hp_enemy
                 
             #If has enemy or just found it calculate shoot direction
             if self.currentEnemy != None:
@@ -98,5 +97,8 @@ class Turret:
     def draw(self, surface):
         rect = self.image.get_rect(center=(self.pos[0], self.pos[1] - 32))
         surface.blit(self.image, rect)
+        
+    
+    def draw_targeting_radius(self, surface):
         pygame.draw.circle(surface, BLUE, self.pos, self.range, 1)
 

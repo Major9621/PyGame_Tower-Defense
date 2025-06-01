@@ -5,6 +5,7 @@ from core.player import Player
 from core.towers.turret import Turret
 from core.managers.ui_manager import UI_Manager
 from core.managers.gold_manager import GoldManager
+from core.towers.turret_shop import TurretShop
 
 from utils.draw_button import draw_button
 from core.screens.pause_menu import pause
@@ -69,15 +70,17 @@ def play():
                         print("Exiting")
                         running = False
                         return False
+                    
             
             pygame.display.update()
     
     def try_place_turret(pos):
         snapped_pos = Turret.snap_to_grid(pos)
-        if Turret.can_place_turret(snapped_pos, turrets, game_map.grid_path):
-            if gold_manager.spend_gold(TOWER_COST):
-                new_turret = Turret(snapped_pos, bullets)
+        if Turret.can_place_turret(snapped_pos, turrets, game_map.grid_path) and turret_shop.selected_item != None:
+            if gold_manager.spend_gold(turret_shop.selected_item.price):
+                new_turret = turret_shop.selected_item.prefab(snapped_pos, bullets)
                 turrets.append(new_turret)
+                turret_shop.deselect_all_items()  
                 return True
         return False
 
@@ -86,12 +89,14 @@ def play():
     turrets = []
     enemies = pygame.sprite.Group()
     bullets = pygame.sprite.Group()
+    turret_shop = TurretShop(None)
 
-    ui_manager = UI_Manager(screen, (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 5), 1, STARTING_GOLD)
+    ui_manager = UI_Manager(screen, (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 5), 1, STARTING_GOLD, turret_shop)
+    turret_shop = ui_manager.turret_shop
     gold_manager = GoldManager(STARTING_GOLD, ui_manager)
     wave_system = WaveManager(lambda cls: enemies.add(cls(game_map.grid_path, gold_manager)), ui_manager)
     player = Player(PLAYER_HP, ui_manager)
-    
+    show_turret_range = False
     
     # Game loop 
     while running:
@@ -108,7 +113,10 @@ def play():
             
             #Mouse Click
             if(event.type == pygame.MOUSEBUTTONDOWN and event.button == 1):
-                try_place_turret(event.pos)
+                if turret_shop.handle_click(event.pos):
+                    pass
+                else:
+                    try_place_turret(event.pos)
             
             #Pause game
             elif event.type == pygame.KEYDOWN:
@@ -120,6 +128,12 @@ def play():
                     elif result[1] == False:
                         exit_gameplay = True
                         return True
+                elif event.key == pygame.K_LSHIFT or event.key == pygame.K_RSHIFT:
+                    show_turret_range = True
+                
+            elif event.type == pygame.KEYUP:
+                if event.key == pygame.K_LSHIFT or event.key == pygame.K_RSHIFT:
+                    show_turret_range = False
 
             if event.type == pygame.USEREVENT:
                 if hasattr(event, 'enemy'):
@@ -162,10 +176,14 @@ def play():
             
         for turret in turrets:
             turret.draw(screen)
+            if show_turret_range:
+                turret.draw_targeting_radius(screen)
             
         for b in bullets:
             b.draw(screen)
+            
 
+        ui_manager.draw_shop()
         ui_manager.draw_health_bar()
         ui_manager.draw_text()
 

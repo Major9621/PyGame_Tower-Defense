@@ -1,8 +1,9 @@
 import pygame
-from core.constants import BLACK, GREEN, YELLOW
+from core.constants import BLACK, GREEN, YELLOW, WHITE
+from core.towers.turret_shop import TurretShop
 
 class UI_Manager:
-    def __init__(self, screen, healthBarPosition, health_default_value, gold_default_value):
+    def __init__(self, screen, healthBarPosition, health_default_value, gold_default_value, turret_shop : TurretShop):
         self.screen = screen
         self.health_bar_position = healthBarPosition
         self.health_amount_text_position = (self.health_bar_position[0], self.health_bar_position[1] - 20)
@@ -14,7 +15,24 @@ class UI_Manager:
         self.radius = 50
         self.wave_number = 0
         self.healthBarValue = health_default_value
+        self.shop_position = (self.health_bar_position[0] - 400, self.health_bar_position[1] + 330)
+        self.turret_shop = turret_shop
+        self.turret_shop.pos = self.shop_position
     
+    
+    def draw_shop(self):
+        # Draw the shop background
+        pygame.draw.rect(self.screen, WHITE, (self.shop_position[0], self.shop_position[1], 300, 80))
+        
+        # Draw the shop title
+        title_text = self.smaller_font.render("Turret Shop", True, YELLOW)
+        title_rect = title_text.get_rect(center=(self.shop_position[0] + 150, self.shop_position[1] - 10))
+        self.screen.blit(title_text, title_rect)
+        
+        # Draw the shop items
+        self.turret_shop.draw_shop_menu(self.screen)
+        
+        
     
     def draw_health_bar(self):
         health_percent = self.healthBarValue
