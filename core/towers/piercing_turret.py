@@ -39,7 +39,7 @@ class PiercingTurret(Turret):
     def shoot(self, direction_to_enemy):
         bullet = PiercingBullet(self.pos, direction_to_enemy, self.bullet_damage, self.bullet_speed, self.bullet_color)
         self.bullets.add(bullet)
-        self.sound_manager.play_random_shoot()
+        self.sound_manager.play_random_shot()
 
     def draw_targeting_radius(self, surface):
         pygame.draw.circle(surface, PURPLE, self.pos, self.range, 1)

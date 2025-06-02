@@ -79,32 +79,36 @@ class Turret:
 
 
     def predict_leading_direction(self, enemy):
-        # Dane wejściowe
         shooter_pos = pygame.math.Vector2(self.pos)
         enemy_pos = pygame.math.Vector2(enemy.position)
 
-        # Szacuj wektor prędkości przeciwnika na podstawie kierunku ruchu
+        # If enemy is frozen then aim directly at it
+        if not enemy.can_move:
+            return (enemy_pos - shooter_pos).normalize()
+
+        # Predict enemy's position based on its path and speed
         if enemy.path_index < len(enemy.path) - 1:
             start = pygame.math.Vector2(enemy.tile_to_pixel(enemy.path[enemy.path_index]))
             end = pygame.math.Vector2(enemy.tile_to_pixel(enemy.path[enemy.path_index + 1]))
             enemy_velocity = (end - start).normalize() * enemy.speed
         else:
-            return None  # przeciwnik już kończy trasę
+            return None
 
+
+        # crazyyy math
         relative_pos = enemy_pos - shooter_pos
         a = enemy_velocity.dot(enemy_velocity) - self.bullet_speed ** 2
         b = 2 * relative_pos.dot(enemy_velocity)
         c = relative_pos.dot(relative_pos)
 
-        discriminant = b ** 2 - 4 * a * c
+        delta = b ** 2 - 4 * a * c
 
-        if discriminant < 0 or abs(a) < 1e-6:
-            # Nie da się trafić – strzelaj w aktualną pozycję
+        if delta < 0 or abs(a) < 1e-6:
             return (enemy_pos - shooter_pos).normalize()
 
-        sqrt_discriminant = math.sqrt(discriminant)
-        t1 = (-b + sqrt_discriminant) / (2 * a)
-        t2 = (-b - sqrt_discriminant) / (2 * a)
+        sqrt_delta = math.sqrt(delta)
+        t1 = (-b + sqrt_delta) / (2 * a)
+        t2 = (-b - sqrt_delta) / (2 * a)
 
         t = min(t for t in [t1, t2] if t > 0) if any(t > 0 for t in [t1, t2]) else None
 
@@ -113,6 +117,7 @@ class Turret:
 
         future_enemy_pos = enemy_pos + enemy_velocity * t
         return (future_enemy_pos - shooter_pos).normalize()
+
 
 
     def shoot(self, direction_to_enemy):
