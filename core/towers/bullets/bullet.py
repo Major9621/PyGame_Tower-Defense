@@ -55,7 +55,7 @@ class Bullet(pygame.sprite.Sprite):
             self.last_frame_time = current_time
 
         if current_time - self.spawnTime >= 1000 * self.despawn_time:
-            print("Bullet despawned")
+            #print("Bullet despawned")
             self.kill()
         
     def on_hit(self, enemy):

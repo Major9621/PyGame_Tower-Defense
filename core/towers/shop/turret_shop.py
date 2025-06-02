@@ -30,8 +30,8 @@ class TurretShop:
                 ShopItem(TOWER_COST, "assets/towers/Idle/basic.png", Turret),
             ],
             1: [  # BASIC upgrades
-                ShopItem(TWIN_TOWER_COST, "assets/towers/Idle/twin.png", TwinTurret),
                 ShopItem(SNIPER_TOWER_COST, "assets/towers/Idle/sniper.png", SniperTurret),
+                ShopItem(TWIN_TOWER_COST, "assets/towers/Idle/twin.png", TwinTurret),
                 ShopItem(FREEZE_TOWER_COST, "assets/towers/Idle/freeze.png", FreezeTurret),
             ],
             2: [  # TWIN upgrades

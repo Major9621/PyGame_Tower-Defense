@@ -18,7 +18,7 @@ class BetterSniperTurret(SniperTurret):
     bulletSpeed = BETTER_SNIPER_TURRET_BULLET_SPEED
     shotsPerSecond = BETTER_SNIPER_TOWER_FIRE_RATE
     shootInterval = 1000 / shotsPerSecond
-    upgradeCategory = ShopUpgradeCategory.SNIPER
+    upgradeCategory = ShopUpgradeCategory.NONE
     
     def draw_targeting_radius(self, surface):
         pygame.draw.circle(surface, ORANGE, self.pos, self.range, 1)
