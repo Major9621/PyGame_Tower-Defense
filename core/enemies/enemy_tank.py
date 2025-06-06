@@ -1,13 +1,14 @@
 from core.enemies.enemy import Enemy
 import pygame
+from core.gameplay_configuration import ENEMY_HEALTH
 from utils.direction import Direction
 
 class TankEnemy(Enemy):
-    def __init__(self, path, gold_manager):
-        super().__init__(path, gold_manager)
+    def __init__(self, path, gold_manager, hp_multiplier):
+        super().__init__(path, gold_manager, hp_multiplier)
         self.speed = 0.5
-        self.health = 300
-        self.max_health = 300
+        self.health = ENEMY_HEALTH * hp_multiplier * 3
+        self.max_health = self.health
         self.flip = True
         self.sprite_sheet =  pygame.image.load("assets/enemies/Magmacrab.png").convert_alpha()
         self.frame_width = self.sprite_sheet.get_width() // 10

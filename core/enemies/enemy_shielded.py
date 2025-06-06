@@ -4,9 +4,9 @@ from core.gameplay_configuration import ENEMY_HEALTH
 from utils.direction import Direction
 
 class ShieldedEnemy(Enemy):
-    def __init__(self, path, gold_manager):
-        super().__init__(path, gold_manager)
-        self.health = ENEMY_HEALTH * 2
+    def __init__(self, path, gold_manager, hp_multiplier):
+        super().__init__(path, gold_manager, hp_multiplier)
+        self.health = ENEMY_HEALTH * 2 * hp_multiplier
         self.max_health = self.health
         self.shield_active = True
         self.shield_health = ENEMY_HEALTH

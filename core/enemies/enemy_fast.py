@@ -1,13 +1,14 @@
 from core.enemies.enemy import Enemy
+from core.gameplay_configuration import ENEMY_HEALTH
 import pygame
 from utils.direction import Direction
 
 class FastEnemy(Enemy):
-    def __init__(self, path, gold_manger):
-        super().__init__(path, gold_manger)
+    def __init__(self, path, gold_manger, hp_multiplier):
+        super().__init__(path, gold_manger, hp_multiplier)
         self.speed = 2.0
-        self.health = 50
-        self.max_health = 50
+        self.health = ENEMY_HEALTH * hp_multiplier /2
+        self.max_health = self.health
         self.flip = True
         self.sprite_sheet = pygame.image.load("assets/enemies/Scorpion.png").convert_alpha()
 

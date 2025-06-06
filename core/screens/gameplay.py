@@ -8,6 +8,7 @@ from core.managers.gold_manager import GoldManager
 from core.towers.shop.turret_shop import TurretShop
 from core.towers.shop.shop_category import ShopUpgradeCategory
 from core.managers.sound_manager import SoundManager
+from core.gameplay_configuration import ENEMY_HP_MULTIPLIER_BY_EVERY_WAVE
 
 from utils.draw_button import draw_button
 from core.screens.pause_menu import pause
@@ -95,7 +96,7 @@ def play():
     ui_manager = UI_Manager(screen, (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 5), 1, STARTING_GOLD, turret_shop)
     turret_shop = ui_manager.turret_shop
     gold_manager = GoldManager(STARTING_GOLD, ui_manager)
-    wave_system = WaveManager(lambda cls: enemies.add(cls(game_map.grid_path, gold_manager)), ui_manager)
+    wave_system = WaveManager(lambda cls: enemies.add(cls(game_map.grid_path, gold_manager, 1.0 + wave_system.wave_number * ENEMY_HP_MULTIPLIER_BY_EVERY_WAVE)), ui_manager)
     player = Player(PLAYER_HP, ui_manager)
     show_turret_range = False
     

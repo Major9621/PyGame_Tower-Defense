@@ -5,9 +5,9 @@ from core.gameplay_configuration import ENEMY_HEALTH, ENEMY_SPEED, ENEMY_DAMAGE
 from utils.direction import Direction
 
 class TeleporterEnemy(Enemy):
-    def __init__(self, path, gold_manager):
-        super().__init__(path, gold_manager)
-        self.health = ENEMY_HEALTH * 0.8
+    def __init__(self, path, gold_manager, hp_multiplier):
+        super().__init__(path, gold_manager, hp_multiplier)
+        self.health = ENEMY_HEALTH * 0.8 * hp_multiplier
         self.max_health = self.health
         self.teleport_cooldown = 3000
         self.stun_duration = 1000

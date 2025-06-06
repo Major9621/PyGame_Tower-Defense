@@ -5,14 +5,14 @@ from core.gameplay_configuration import ENEMY_GOLD_DROP, ENEMY_HEALTH, ENEMY_SPE
 from utils.direction import Direction
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, path, gold_manger):
+    def __init__(self, path, gold_manger, hp_multiplier):
         super().__init__()
         self.path = path
         self.path_index = 0
         self.progress = 0
         self.damage = ENEMY_DAMAGE
         self.speed = ENEMY_SPEED
-        self.health = ENEMY_HEALTH
+        self.health = ENEMY_HEALTH * hp_multiplier
         self.max_health = ENEMY_HEALTH
         self.reached_end = False
         self.value = 10
